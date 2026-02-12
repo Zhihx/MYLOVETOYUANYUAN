@@ -6,7 +6,7 @@
       name="viewport"
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover"
     />
-    <title>A little gift to Bunny</title>
+    <title>A little gift to Bunny · with melody</title>
 
     <!-- 🌹 Elegant & highly readable font system · Balancing handwritten romance and screen clarity 🌹 -->
     <!-- 1. Body/slogan: modern sans-serif · elegant and light -->
@@ -468,6 +468,61 @@
           -apple-system, BlinkMacSystemFont, "Apple Color Emoji",
           "Segoe UI Emoji", sans-serif !important;
       }
+
+      /* ---------- 🎵 NEW: Music control · romantic subtle button, does not disturb original design ---------- */
+      .music-controls {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 16px;
+        margin-top: 8px;
+        margin-bottom: 4px;
+        width: 100%;
+        opacity: 0.8;
+        transition: opacity 0.2s;
+      }
+      .music-btn {
+        background: rgba(255, 220, 220, 0.7);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.8);
+        border-radius: 60px;
+        padding: 10px 24px;
+        font-size: 15px;
+        font-weight: 600;
+        color: #6b3a3a;
+        font-family: "Inter", "Montserrat", sans-serif;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        box-shadow: 0 4px 12px rgba(150, 70, 70, 0.1);
+        border: 1px solid rgba(255, 200, 200, 0.6);
+        -webkit-tap-highlight-color: transparent;
+      }
+      .music-btn:active {
+        transform: scale(0.94);
+        background: rgba(255, 200, 200, 0.9);
+      }
+      .music-btn span {
+        font-size: 20px;
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Apple Color Emoji", sans-serif;
+      }
+      .music-status {
+        font-size: 13px;
+        color: #875050;
+        font-weight: 500;
+        font-style: italic;
+        margin-left: 6px;
+      }
+      /* Hide default audio element */
+      #bgMusic {
+        display: none;
+      }
     </style>
   </head>
   <body>
@@ -538,6 +593,21 @@
         <span class="heart-beat">❤️</span> Always~~
         <span class="heart-beat">❤️</span>
       </div>
+
+      <!-- ===== 🎵 ADDED: Background music control · reading local mp3 file ===== -->
+      <!-- Audio element: src points to local "music.mp3" — you can replace with your own file -->
+      <audio id="bgMusic" src="music.mp3" loop></audio>
+      
+      <div class="music-controls">
+        <button id="playMusicBtn" class="music-btn">
+          <span>🎵</span> Play melody
+        </button>
+        <button id="pauseMusicBtn" class="music-btn">
+          <span>🔇</span> Pause
+        </button>
+        <span id="musicStatus" class="music-status"> ✨ local · music.mp3</span>
+      </div>
+      <!-- ===== END of music addition ===== -->
     </main>
 
     <script>
@@ -844,6 +914,59 @@
             splashEmojis(18, valentineEmojis, true);
           }, 600);
         });
+
+        // ---------- 🎵🎵🎵 ADDED: Background music controller · local mp3 file ----------
+        // Get audio element and buttons
+        const bgAudio = document.getElementById('bgMusic');
+        const playBtn = document.getElementById('playMusicBtn');
+        const pauseBtn = document.getElementById('pauseMusicBtn');
+        const musicStatus = document.getElementById('musicStatus');
+
+        // Check if audio element is ready
+        if (bgAudio) {
+          // When play button clicked – play local music.mp3
+          playBtn.addEventListener('click', function(e) {
+            bgAudio.play().then(() => {
+              musicStatus.innerHTML = '🎶 melody playing · music.mp3';
+              musicStatus.style.color = '#9e3a3a';
+              // Also splash some music note emoji for fun (small romantic touch)
+              splashEmojis(12, ['🎵','🎶','🎼','🎹','🎻','🥁','🎷','🎸','💕','🌹'], true);
+            }).catch(error => {
+              console.log('Playback prevented until user interaction:', error);
+              musicStatus.innerHTML = '⚠️ tap again to play (autoplay policy)';
+              musicStatus.style.color = '#a14545';
+            });
+            // prevent double emoji from document click (stopPropagation not needed, but avoid conflict)
+            e.stopPropagation(); 
+          });
+
+          // When pause button clicked – pause the music
+          pauseBtn.addEventListener('click', function(e) {
+            bgAudio.pause();
+            musicStatus.innerHTML = '🔇 paused · local music.mp3';
+            musicStatus.style.color = '#875050';
+            e.stopPropagation();
+          });
+
+          // Optional: when audio ends, update status
+          bgAudio.addEventListener('ended', function() {
+            musicStatus.innerHTML = '✨ loop again · music.mp3';
+            // replay if loop is set but just in case
+          });
+          
+          // if audio plays successfully
+          bgAudio.addEventListener('play', function() {
+            musicStatus.innerHTML = '🎶 melody playing · music.mp3';
+            musicStatus.style.color = '#9e3a3a';
+          });
+          
+          bgAudio.addEventListener('pause', function() {
+            musicStatus.innerHTML = '🔇 paused · local music.mp3';
+            musicStatus.style.color = '#875050';
+          });
+        }
+        // ---------- 🎵 End of background music feature ----------
+
       })();
     </script>
 
@@ -868,6 +991,14 @@
           margin-top: env(safe-area-inset-top, 0);
           margin-bottom: env(safe-area-inset-bottom, 0);
         }
+      }
+      /* music button fine-tune */
+      .music-controls {
+        flex-wrap: wrap;
+      }
+      .music-btn {
+        min-width: 130px;
+        justify-content: center;
       }
     </style>
   </body>
