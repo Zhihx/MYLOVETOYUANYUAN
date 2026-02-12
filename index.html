@@ -6,27 +6,24 @@
       name="viewport"
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover"
     />
-    <title>A little gift to Bunny · with melody</title>
+    <title>A little gift to Bunny · click firework</title>
 
-    <!-- 🌹 Elegant & highly readable font system · Balancing handwritten romance and screen clarity 🌹 -->
-    <!-- 1. Body/slogan: modern sans-serif · elegant and light -->
+    <!-- 🌹 Elegant & highly readable font system -->
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Montserrat:wght@300;400;500;600&family=Quicksand:wght@300;400;500;600&display=swap"
       rel="stylesheet"
     />
-    <!-- 2. Handwritten but legible: for love letter inside & signature · not overly ornate -->
     <link
       href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600&family=Patrick+Hand&family=Kalam:wght@300;400&display=swap"
       rel="stylesheet"
     />
-    <!-- 3. Classic serif · for time numbers, dignified and clear -->
     <link
       href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=EB+Garamond:wght@500;600&display=swap"
       rel="stylesheet"
     />
 
     <style>
-      /* reset & romantic atmosphere — optimized for iPhone 16 OLED */
+      /* reset & romantic atmosphere */
       * {
         margin: 0;
         padding: 0;
@@ -48,244 +45,153 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        padding: 16px;
+        padding: 12px; /* reduced outer padding */
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
         text-rendering: optimizeLegibility;
-        /* Adapt to iPhone Dynamic Island & bottom */
-        padding-top: env(safe-area-inset-top, 16px);
-        padding-bottom: env(safe-area-inset-bottom, 16px);
+        padding-top: env(safe-area-inset-top, 12px);
+        padding-bottom: env(safe-area-inset-bottom, 12px);
       }
 
-      /* Main card — delicate frosted glass */
+      /* Main card — ULTRA TIGHT spacing */
       .valentine-card {
-        max-width: 400px;
+        max-width: 380px; /* slightly narrower */
         width: 100%;
         background: rgba(255, 248, 245, 0.78);
         backdrop-filter: blur(22px);
         -webkit-backdrop-filter: blur(22px);
-        border-radius: 52px;
+        border-radius: 48px; /* slightly smaller radius */
         border: 1px solid rgba(255, 200, 200, 0.6);
         box-shadow:
-          0 28px 50px rgba(160, 70, 70, 0.15),
-          0 8px 18px rgba(255, 170, 170, 0.25),
+          0 24px 42px rgba(160, 70, 70, 0.15),
+          0 6px 14px rgba(255, 170, 170, 0.25),
           inset 0 0 0 1.5px rgba(255, 255, 255, 0.8);
-        padding: 36px 26px;
+        padding: 20px 20px; /* significantly reduced */
         display: flex;
         flex-direction: column;
         align-items: center;
         position: relative;
         overflow: hidden;
-        transition: all 0.3s cubic-bezier(0.3, 0.8, 0.4, 1);
       }
 
-      /* Decorative elements — minimal visual distraction */
       .petal {
         position: absolute;
         background: rgba(255, 180, 180, 0.3);
-        width: 18px;
-        height: 18px;
+        width: 16px;
+        height: 16px;
         border-radius: 100% 0 100% 0;
         transform: rotate(45deg);
-        top: 15px;
-        left: 20px;
+        top: 12px;
+        left: 16px;
         opacity: 0.3;
-        filter: blur(8px);
+        filter: blur(6px);
       }
       .petal2 {
         top: auto;
-        bottom: 15px;
-        right: 15px;
-        width: 26px;
-        height: 26px;
+        bottom: 12px;
+        right: 16px;
+        width: 22px;
+        height: 22px;
         background: rgba(255, 140, 160, 0.25);
       }
 
-      /* Envelope area */
-      .envelope-section {
+      /* ---------- 💓 HEART SECTION · maximally compact ---------- */
+      .heart-section {
         width: 100%;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        margin-bottom: 16px;
+        margin-bottom: 4px;  /* minimal */
         position: relative;
+        min-height: 140px;   /* reduced */
       }
 
-      .envelope-wrapper {
+      .heart-touch {
         position: relative;
-        width: 190px;
-        height: 148px;
+        width: 100px;        /* smaller */
+        height: 100px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         cursor: pointer;
-        transition: transform 0.2s cubic-bezier(0.2, 0.9, 0.4, 1);
-        margin: 10px 0 8px;
         -webkit-tap-highlight-color: transparent;
-      }
-      .envelope-wrapper:active {
-        transform: scale(0.96);
+        margin: 0;          /* no margin */
       }
 
-      .envelope {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        background: #ffe5e5;
-        border-radius: 20px 20px 16px 16px;
-        box-shadow:
-          0 10px 0 #d6a0a0,
-          0 18px 35px rgba(140, 70, 70, 0.2);
-        border: 1px solid #ffbebe;
-        overflow: hidden;
-      }
-
-      .flap {
-        position: absolute;
-        top: -8px;
-        left: 0;
-        width: 100%;
-        height: 54px;
-        background: #ffd6d6;
-        clip-path: polygon(0% 0%, 100% 0%, 50% 70%);
-        transform-origin: top;
-        transition: transform 0.6s cubic-bezier(0.3, 1.3, 0.5, 1);
-        border-bottom: 2px solid #ffaaaa;
-        z-index: 5;
-      }
-
-      .envelope.open .flap {
-        transform: rotateX(180deg);
-        pointer-events: none;
-        z-index: 0;
-      }
-
-      .seal {
-        position: absolute;
-        top: 18px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 38px;
-        height: 38px;
-        background: #ff4f6c;
-        border-radius: 50% 50% 0 0;
-        z-index: 10;
-        transition: all 0.3s;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        box-shadow: 0 6px 14px rgba(255, 40, 80, 0.4);
-      }
-      .seal::before,
-      .seal::after {
-        content: "";
-        position: absolute;
-        width: 38px;
-        height: 38px;
-        background: #ff4f6c;
-        border-radius: 50%;
-      }
-      .seal::before {
-        left: -20px;
-      }
-      .seal::after {
-        right: -20px;
-      }
-      .seal span {
-        position: relative;
-        z-index: 12;
-        color: white;
-        font-size: 24px;
-      }
-
-      /* Love letter inside — using handwritten but clear fonts */
-      .letter-inside {
-        position: absolute;
-        top: 14px;
-        left: 12px;
-        width: calc(100% - 24px);
-        height: calc(100% - 24px);
-        background: #fffcf7;
-        border-radius: 16px;
-        padding: 20px 12px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        box-shadow:
-          inset 0 0 0 1px #ffe0e0,
-          inset 0 0 20px #ffe7e7;
-        transform: translateY(24px);
-        opacity: 0;
-        transition: all 0.5s cubic-bezier(0.2, 1, 0.3, 1) 0.1s;
-        z-index: 1;
-      }
-      .envelope.open .letter-inside {
-        transform: translateY(0);
-        opacity: 1;
-      }
-
-      .letter-emoji {
-        font-size: 28px;
-        margin-bottom: 10px;
-        letter-spacing: 10px;
+      /* main heart emoji */
+      .main-heart {
+        font-size: 68px;    /* smaller, more proportional */
+        user-select: none;
+        transform-origin: center;
+        filter: drop-shadow(0 10px 18px rgba(200, 70, 90, 0.28));
+        display: inline-block;
         font-family:
-          -apple-system, BlinkMacSystemFont, "Apple Color Emoji", sans-serif;
+          -apple-system, BlinkMacSystemFont, "Apple Color Emoji",
+          "Segoe UI Emoji", sans-serif;
+        transition: transform 0.28s cubic-bezier(0.34, 1.4, 0.64, 1.2);
+        will-change: transform;
       }
 
-      /* ✍️ Love letter text: Caveat — handwritten feel but very clear, elegant and readable */
-      .letter-message {
-        font-size: 20px;
-        color: #8a4242;
-        font-weight: 500;
+      /* ✨ ULTRA-SILKY HEARTBEAT */
+      @keyframes silkyHeartbeat {
+        0% { transform: scale(1) rotate(0deg); }
+        18% { transform: scale(1.2) rotate(-6deg); }
+        32% { transform: scale(1.06) rotate(5deg); }
+        48% { transform: scale(1.26) rotate(-4deg); }
+        64% { transform: scale(1.12) rotate(3deg); }
+        78% { transform: scale(1.18) rotate(-2deg); }
+        92% { transform: scale(1.02) rotate(1deg); }
+        100% { transform: scale(1) rotate(0deg); }
+      }
+
+      .heart-beat-silky {
+        animation: silkyHeartbeat 0.9s cubic-bezier(0.23, 0.98, 0.32, 1.1) forwards;
+      }
+
+      /* secret letter - very close to heart */
+      .secret-letter {
+        margin-top: 8px;     /* much closer */
+        padding: 14px 16px;
+        background: rgba(255, 245, 240, 0.9);
+        backdrop-filter: blur(12px);
+        border-radius: 40px;
+        border: 1px solid rgba(255, 200, 200, 0.7);
+        box-shadow: inset 0 0 16px #ffe2e2;
+        font-family: "Caveat", "Patrick Hand", cursive;
+        font-size: 24px;    /* slightly smaller */
+        color: #7a3e3e;
         text-align: center;
-        font-family: "Caveat", "Patrick Hand", "Kalam", cursive;
-        line-height: 1.4;
+        line-height: 1.35;
         letter-spacing: 1.2px;
-        text-shadow: 0 2px 4px rgba(255, 210, 210, 0.2);
-        word-break: break-word;
+        opacity: 0;
+        transform: translateY(16px);
+        transition: all 0.6s cubic-bezier(0.34, 1.4, 0.64, 1.1) 0.2s;
+        width: 100%;
       }
 
-      .envelope-text {
-        margin-top: 14px;
-        color: #8a4b4b;
-        font-weight: 500;
-        font-size: 15px;
-        letter-spacing: 3px;
-        text-transform: uppercase;
-        font-family: "Inter", "Montserrat", sans-serif;
+      .secret-letter.show {
+        opacity: 1;
+        transform: translateY(0);
       }
 
-      /* ----- Time section · numbers use classic serif, dignified and clear ----- */
+      /* NO HINT TEXT */
+      .heart-hint {
+        display: none;
+      }
+
+      /* ---------- TIME SECTION · ultra compact ---------- */
       .time-section {
         width: 100%;
         background: rgba(255, 250, 242, 0.7);
-        backdrop-filter: blur(14px);
-        -webkit-backdrop-filter: blur(14px);
-        border-radius: 68px;
-        padding: 26px 20px;
-        margin: 22px 0 16px;
+        backdrop-filter: blur(12px);
+        border-radius: 48px;
+        padding: 14px 14px;   /* much tighter */
+        margin: 10px 0 8px;   /* reduced */
         border: 1px solid rgba(255, 190, 190, 0.6);
         box-shadow:
-          inset 0 4px 12px rgba(255, 255, 255, 0.8),
-          0 14px 28px rgba(150, 80, 80, 0.12);
-      }
-
-      .time-label {
-        font-family: "Inter", "Montserrat", sans-serif;
-        font-size: 17px;
-        font-weight: 600;
-        color: #683838;
-        letter-spacing: 2.5px;
-        text-transform: uppercase;
-        margin-bottom: 16px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 12px;
-      }
-      .time-label span {
-        font-size: 26px;
-        font-family:
-          -apple-system, BlinkMacSystemFont, "Apple Color Emoji", sans-serif;
+          inset 0 4px 10px rgba(255, 255, 255, 0.8),
+          0 10px 20px rgba(150, 80, 80, 0.1);
       }
 
       .time-display {
@@ -293,10 +199,10 @@
         flex-wrap: wrap;
         justify-content: center;
         align-items: baseline;
-        gap: 12px 20px;
+        gap: 6px 12px;       /* tighter */
         background: rgba(255, 242, 242, 0.6);
-        padding: 20px 12px;
-        border-radius: 80px;
+        padding: 12px 8px;
+        border-radius: 60px;
         border: 1px dashed #d68a8a;
       }
 
@@ -304,87 +210,52 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        min-width: 70px;
+        min-width: 52px;     /* narrower */
       }
 
-      /* Numbers use Cormorant Garamond — classic elegance, excellent readability */
       .time-number {
-        font-size: 42px;
+        font-size: 32px;     /* smaller */
         font-weight: 700;
         font-family: "Cormorant Garamond", "EB Garamond", serif;
         color: #722a2a;
         line-height: 0.9;
-        text-shadow: 0 3px 8px rgba(255, 160, 160, 0.4);
+        text-shadow: 0 2px 6px rgba(255, 160, 160, 0.4);
         background: linear-gradient(145deg, #9f4040, #6b2a2a);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        letter-spacing: 1.5px;
+        letter-spacing: 1.2px;
       }
 
       .time-label-small {
-        font-size: 13px;
+        font-size: 11px;
         color: #8a5050;
-        margin-top: 6px;
+        margin-top: 2px;
         font-weight: 600;
         text-transform: uppercase;
-        letter-spacing: 2.5px;
+        letter-spacing: 1.5px;
         font-family: "Inter", "Montserrat", sans-serif;
       }
 
-      /* ----- Romantic quote · also using Caveat, elegant and readable ----- */
       .romantic-quote {
         font-family: "Caveat", "Patrick Hand", cursive;
-        font-size: 26px;
+        font-size: 22px;     /* smaller */
         font-weight: 500;
         color: #6a3a3a;
-        margin: 16px 0 8px;
+        margin: 8px 0 2px;
         text-align: center;
         border-top: 1px solid rgba(255, 150, 150, 0.4);
-        padding-top: 24px;
-        line-height: 1.35;
-        letter-spacing: 1.2px;
+        padding-top: 14px;
+        line-height: 1.3;
+        letter-spacing: 1px;
       }
 
       .signature {
         font-family: "Caveat", "Kalam", cursive;
-        font-size: 22px;
-        font-weight: 400;
-        margin-top: 8px;
-        color: #9a5e5e;
-        letter-spacing: 1.8px;
-      }
-
-      /* 🌟🌟🌟 Special dedication —— MYLOVETOYUANYUAN 🌟🌟🌟 */
-      .dedication {
-        font-family: "Inter", "Montserrat", sans-serif;
         font-size: 18px;
-        font-weight: 600;
-        color: #a14242;
-        text-align: center;
-        letter-spacing: 4px;
-        text-transform: uppercase;
-        margin: 12px 0 8px;
-        padding: 10px 18px;
-        background: rgba(255, 230, 230, 0.5);
-        border-radius: 40px;
-        backdrop-filter: blur(6px);
-        border: 1px solid rgba(255, 255, 255, 0.6);
-        box-shadow: 0 2px 8px rgba(180, 100, 100, 0.1);
-        word-break: break-word;
-      }
-
-      .hint {
-        color: #9e5a5a;
-        font-size: 14px;
-        margin-top: 8px;
-        font-weight: 500;
-        background: rgba(255, 240, 240, 0.7);
-        padding: 10px 24px;
-        border-radius: 60px;
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.9);
-        font-family: "Inter", "Montserrat", sans-serif;
-        letter-spacing: 1.8px;
+        font-weight: 400;
+        margin-top: 4px;
+        color: #9a5e5e;
+        letter-spacing: 1.5px;
       }
 
       .heart-beat {
@@ -394,17 +265,12 @@
           -apple-system, BlinkMacSystemFont, "Apple Color Emoji", sans-serif;
       }
       @keyframes pulse {
-        0%,
-        100% {
-          transform: scale(1);
-        }
-        50% {
-          transform: scale(1.2);
-        }
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.2); }
       }
 
-      /* ---------- 🌈 EMOJI JUMP AREA · NEW: Fly from bottom to top + fade out + smaller size ---------- */
-      .emoji-splash-container {
+      /* ---------- 🎆 FIREWORK EMOJI · explode from click point, silky fade ---------- */
+      .firework-container {
         position: fixed;
         top: 0;
         left: 0;
@@ -415,147 +281,91 @@
         overflow: hidden;
       }
 
-      .float-emoji {
+      .firework-emoji {
         position: absolute;
-        font-size: 32px; /* Smaller emoji size, elegant and delicate */
-        animation: floatUpFade 3s ease-out forwards;
-        filter: drop-shadow(0 6px 12px rgba(190, 70, 90, 0.2));
+        font-size: 32px;
         will-change: transform, opacity;
         font-family:
           -apple-system, BlinkMacSystemFont, "Apple Color Emoji",
           "Segoe UI Emoji", sans-serif;
-        font-weight: 400;
-        text-rendering: optimizeLegibility;
-        -webkit-font-smoothing: antialiased;
-        -webkit-backface-visibility: hidden;
-        backface-visibility: hidden;
-        transform: translateZ(0);
-        opacity: 0.9;
+        filter: drop-shadow(0 8px 16px rgba(200, 70, 90, 0.3));
+        pointer-events: none;
+        opacity: 1;
+        animation: fireworkFloat 2.2s cubic-bezier(0.16, 0.9, 0.3, 1.2) forwards;
       }
 
-      /* 🌟 Single animation: fly from bottom to top, gradually fade out */
-      @keyframes floatUpFade {
+      @keyframes fireworkFloat {
         0% {
-          transform: translateY(0) scale(0.7) rotate(0deg);
+          transform: translate(0, 0) scale(0.5) rotate(0deg);
+          opacity: 1;
+        }
+        30% {
+          transform: translate(var(--dx1), var(--dy1)) scale(1.1) rotate(var(--rot1));
           opacity: 0.9;
         }
-        20% {
-          transform: translateY(-25vh) scale(0.9) rotate(8deg);
-          opacity: 0.8;
-        }
-        50% {
-          transform: translateY(-55vh) scale(1) rotate(-5deg);
-          opacity: 0.6;
-        }
-        80% {
-          transform: translateY(-85vh) scale(0.9) rotate(6deg);
-          opacity: 0.3;
+        60% {
+          transform: translate(var(--dx2), var(--dy2)) scale(1.0) rotate(var(--rot2));
+          opacity: 0.5;
         }
         100% {
-          transform: translateY(-120vh) scale(0.7) rotate(0deg);
+          transform: translate(var(--dx3), var(--dy3)) scale(0.6) rotate(var(--rot3));
           opacity: 0;
         }
       }
 
-      /* Ensure all emoji render with Apple native style */
-      .letter-emoji,
-      .time-label span,
-      .heart-beat,
-      .hint,
-      .float-emoji,
-      .seal span {
-        font-family:
-          -apple-system, BlinkMacSystemFont, "Apple Color Emoji",
-          "Segoe UI Emoji", sans-serif !important;
+      /* ---------- 🏀 BOUNCING EMOJI (heart explosion) ---------- */
+      .bounce-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 1000;
+        overflow: hidden;
       }
 
-      /* ---------- 🎵 NEW: Music control · romantic subtle button, does not disturb original design ---------- */
-      .music-controls {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 16px;
-        margin-top: 8px;
-        margin-bottom: 4px;
-        width: 100%;
-        opacity: 0.8;
-        transition: opacity 0.2s;
-      }
-      .music-btn {
-        background: rgba(255, 220, 220, 0.7);
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
-        border: 1px solid rgba(255, 255, 255, 0.8);
-        border-radius: 60px;
-        padding: 10px 24px;
-        font-size: 15px;
-        font-weight: 600;
-        color: #6b3a3a;
-        font-family: "Inter", "Montserrat", sans-serif;
-        letter-spacing: 2px;
-        text-transform: uppercase;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        box-shadow: 0 4px 12px rgba(150, 70, 70, 0.1);
-        border: 1px solid rgba(255, 200, 200, 0.6);
-        -webkit-tap-highlight-color: transparent;
-      }
-      .music-btn:active {
-        transform: scale(0.94);
-        background: rgba(255, 200, 200, 0.9);
-      }
-      .music-btn span {
-        font-size: 20px;
+      .bounce-emoji {
+        position: absolute;
+        font-size: 32px;
+        will-change: transform, opacity;
         font-family:
-          -apple-system, BlinkMacSystemFont, "Apple Color Emoji", sans-serif;
+          -apple-system, BlinkMacSystemFont, "Apple Color Emoji",
+          "Segoe UI Emoji", sans-serif;
+        filter: drop-shadow(0 8px 14px rgba(190, 60, 80, 0.25));
+        pointer-events: none;
+        opacity: 1;
       }
-      .music-status {
-        font-size: 13px;
-        color: #875050;
-        font-weight: 500;
-        font-style: italic;
-        margin-left: 6px;
-      }
-      /* Hide default audio element */
+
       #bgMusic {
         display: none;
       }
     </style>
   </head>
   <body>
-    <!-- Floating emoji container · flying from bottom to top -->
-    <div class="emoji-splash-container" id="emojiSplash"></div>
+    <!-- Firework container (background clicks) -->
+    <div class="firework-container" id="fireworkContainer"></div>
+    <!-- Bouncing container (heart explosion) -->
+    <div class="bounce-container" id="bounceContainer"></div>
 
     <main class="valentine-card">
-      <!-- Gentle decorations -->
       <div class="petal"></div>
       <div class="petal petal2"></div>
 
-      <!-- Envelope interaction area -->
-      <div class="envelope-section">
-        <div class="envelope-wrapper" id="envelopeBtn">
-          <div class="envelope" id="envelope">
-            <div class="flap"></div>
-            <div class="seal">
-              <span>❤️</span>
-            </div>
-            <!-- Love letter inside · clear handwritten font -->
-            <div class="letter-inside">
-              <div class="letter-message">
-                you are my today<br />and all of my tomorrows
-              </div>
-            </div>
-          </div>
+      <!-- ===== 💖 SILENT HEART · ultra compact ===== -->
+      <div class="heart-section">
+        <div class="heart-touch" id="heartTouch">
+          <span class="main-heart" id="mainHeart">❤️</span>
         </div>
-        <div class="romantic-quote" id="envelopeHint">
-          ✉️ tap the envelope ✉️
+        <div class="heart-hint" id="heartHint"></div>
+        
+        <!-- Secret love letter — very close to heart -->
+        <div class="secret-letter" id="secretLetter">
+          you are my today<br>and all of my tomorrows
         </div>
       </div>
 
-      <!-- Time counter · starting from 2024.12.14 00:00 -->
+      <!-- Time counter — tightly integrated -->
       <div class="time-section">
         <div class="romantic-quote"><span>⏳</span> We are <span>⏳</span></div>
         <div class="time-display" id="timeDisplay">
@@ -578,45 +388,29 @@
         </div>
       </div>
 
-      <!-- Romantic poem · clear handwritten font -->
+      <!-- Romantic poem -->
       <div class="romantic-quote">
         “in case you ever foolishly forget, <br />i am never not thinking of
         you.”
         <div class="signature">— from the moment we started</div>
       </div>
 
-      <!-- 🌟🌟🌟 Special dedication · elegant and eye-catching · MYLOVETOYUANYUAN 🌟🌟🌟 -->
       <div class="signature">MYLOVETOYUANYUAN</div>
-
-      <!-- Light hint -->
       <div class="signature">
         <span class="heart-beat">❤️</span> Always~~
         <span class="heart-beat">❤️</span>
       </div>
 
-      <!-- ===== 🎵 ADDED: Background music control · reading local mp3 file ===== -->
-      <!-- Audio element: src points to local "music.mp3" — you can replace with your own file -->
-      <audio id="bgMusic" src="music.mp3" loop></audio>
-      
-      <div class="music-controls">
-        <button id="playMusicBtn" class="music-btn">
-          <span>🎵</span> Play melody
-        </button>
-        <button id="pauseMusicBtn" class="music-btn">
-          <span>🔇</span> Pause
-        </button>
-        <span id="musicStatus" class="music-status"> ✨ local · music.mp3</span>
-      </div>
-      <!-- ===== END of music addition ===== -->
+      <!-- Hidden autoplay music -->
+      <audio id="bgMusic" src="music.mp3" autoplay loop preload="auto"></audio>
     </main>
 
     <script>
       (function () {
         "use strict";
 
-        // ---------- Time together counter (2024.12.14 00:00) ----------
+        // ---------- Time counter (2024.12.14) ----------
         const startDate = new Date(2024, 11, 14, 0, 0, 0);
-
         function updateTimeCounter() {
           const now = new Date();
           const diffMs = now - startDate;
@@ -640,365 +434,297 @@
         updateTimeCounter();
         setInterval(updateTimeCounter, 1000);
 
-        // ---------- 💖 Valentine's exclusive emoji · only romantic/festive atmosphere ----------
-        const valentineEmojis = [
-          "❤️",
-          "🧡",
-          "💛",
-          "💚",
-          "💙",
-          "💜",
-          "💕",
-          "💞",
-          "💓",
-          "💗",
-          "💖",
-          "💘",
-          "💝",
-          "💟",
-          "❤️‍🔥",
-          "🩷",
-          "🩵",
-          "🌸",
-          "🌹",
-          "🌷",
-          "🌺",
-          "💐",
-          "🥀",
-          "🍫",
-          "🍰",
-          "🍓",
-          "🍒",
-          "💌",
-          "💋",
-          "👩‍❤️‍👨",
-          "💑",
-          "💏",
-          "🫶",
-          "🐇",
-          "🕊️",
-          "🦋",
-          "✨",
-          "⭐",
-          "🌠",
-          "💫",
-          "🎀",
-          "🎁",
-          "🎈",
-          "🏵️",
-          "☁️",
-          "🌈",
-          "🌙",
+        // ---------- 💓 HEART INTERACTION · no emoji on tap, only explosion bounce ----------
+        const heartElement = document.getElementById("mainHeart");
+        const heartTouch = document.getElementById("heartTouch");
+        const secretLetter = document.getElementById("secretLetter");
+        
+        // State
+        let tapCount = 0;
+        let currentScale = 1;
+        const MAX_TAPS = 6;
+        let exploded = false;
+
+        // Emoji collection for bouncing explosion
+        const bounceEmojis = [
+          "❤️", "🧡", "💛", "💚", "💙", "💜", "🩷", "💖", "💘", "💝", 
+          "❤️‍🔥", "🫶", "🐇", "🐰", "🌸", "🌹", "💕", "💞", "💓", "💗"
         ];
 
-        // ---------- 🐰 Special emoji collection for click: hearts & bunnies ----------
-        const heartAndBunnyEmojis = [
-          "❤️",
-          "🧡",
-          "💛",
-          "💚",
-          "💙",
-          "💜",
-          "🩷",
-          "💖",
-          "💘",
-          "💝",
-          "❤️‍🔥",
-          "🫶",
-          "🐇",
-          "🐰",
-          "🐇",
-          "🐰",
-          "🌸",
-          "🌹",
-        ];
-
-        // ---------- 🌅 EMOJI fly from bottom to top · smaller size · fade out ----------
-        function splashEmojis(
-          count = 30,
-          emojiSet = valentineEmojis,
-          fromBottom = true,
-        ) {
-          const container = document.getElementById("emojiSplash");
-          const viewportWidth = window.innerWidth;
-          const viewportHeight = window.innerHeight;
-
-          // Starting position: bottom of screen (20px above bottom ~ lower middle)
-          const startYBase = viewportHeight - 40;
+        // 🏀 GRAVITY BOUNCE · from heart downward
+        function createBouncingEmoji(heartX, heartY) {
+          const container = document.getElementById("bounceContainer");
+          const count = 60 + Math.floor(Math.random() * 40);
 
           for (let i = 0; i < count; i++) {
             const emoji = document.createElement("div");
-            emoji.className = "float-emoji";
-
-            const randomIndex = Math.floor(Math.random() * emojiSet.length);
-            emoji.textContent = emojiSet[randomIndex];
-
-            // Random horizontal position (across screen width)
-            const posX =
-              Math.random() * viewportWidth * 0.9 + viewportWidth * 0.05;
-
-            let posY;
-            if (fromBottom) {
-              // Start Y: from different heights at bottom, create layered effect
-              posY = startYBase - Math.random() * 60;
-            } else {
-              // For click events: use provided Y position (will be set outside)
-              posY = startYBase - Math.random() * 60; // fallback
+            emoji.className = "bounce-emoji";
+            
+            const randomIndex = Math.floor(Math.random() * bounceEmojis.length);
+            emoji.textContent = bounceEmojis[randomIndex];
+            
+            const startX = heartX + (Math.random() - 0.5) * 30;
+            const startY = heartY + (Math.random() - 0.5) * 30;
+            
+            emoji.style.left = startX + "px";
+            emoji.style.top = startY + "px";
+            
+            const size = 22 + Math.floor(Math.random() * 26);
+            emoji.style.fontSize = size + "px";
+            
+            // physics parameters
+            const vx = (Math.random() - 0.5) * 14;
+            const vy = 5 + Math.random() * 12;
+            const gravity = 0.55;
+            const bounceFactor = 0.68;
+            const groundY = window.innerHeight - 60;
+            
+            let x = startX;
+            let y = startY;
+            let velX = vx;
+            let velY = vy;
+            
+            let opacity = 0.95;
+            let age = 0;
+            const maxAge = 180 + Math.floor(Math.random() * 80);
+            
+            let rotation = Math.random() * 360;
+            const rotSpeed = (Math.random() - 0.5) * 12;
+            
+            function animate() {
+              if (!emoji.parentNode) return;
+              
+              velY += gravity;
+              x += velX;
+              y += velY;
+              rotation += rotSpeed;
+              
+              if (y >= groundY) {
+                y = groundY;
+                velY = -velY * bounceFactor;
+                velX *= 0.96;
+                if (Math.abs(velY) < 0.8) velY = -1.2;
+                opacity *= 0.92;
+              }
+              
+              if (x < 10) {
+                x = 10;
+                velX = -velX * 0.6;
+              }
+              if (x > window.innerWidth - 10) {
+                x = window.innerWidth - 10;
+                velX = -velX * 0.6;
+              }
+              
+              opacity *= 0.99;
+              
+              emoji.style.transform = `translate(${x - startX}px, ${y - startY}px) rotate(${rotation}deg)`;
+              emoji.style.opacity = Math.max(0, opacity);
+              
+              age++;
+              if (age < maxAge && opacity > 0.05) {
+                requestAnimationFrame(animate);
+              } else {
+                if (emoji.parentNode) emoji.remove();
+              }
             }
-
-            emoji.style.left = posX + "px";
-            emoji.style.top = posY + "px";
-
-            // Smaller emoji size: 26px ~ 42px, more delicate
-            const size = 26 + Math.floor(Math.random() * 18);
-            emoji.style.fontSize = size + "px";
-
-            // Random animation duration: 2.5s ~ 4s, different flight speeds
-            const duration = 2.5 + Math.random() * 1.8;
-            emoji.style.animationDuration = duration + "s";
-
-            // Random delay, avoid taking off simultaneously
-            const delay = Math.random() * 0.8;
-            emoji.style.animationDelay = delay + "s";
-
-            // Very light shadow
-            emoji.style.filter = `drop-shadow(0 4px 8px rgba(180, 70, 80, 0.15))`;
-
+            
             container.appendChild(emoji);
-
-            // Remove element after animation ends
-            setTimeout(
-              () => {
-                if (emoji.parentNode) {
-                  emoji.remove();
-                }
-              },
-              (duration + delay) * 1000 + 200,
-            );
+            requestAnimationFrame(animate);
           }
         }
 
-        // ---------- ✨ NEW: Click anywhere on screen to pop hearts & bunnies emoji ----------
-        function createClickEmoji(e) {
-          const container = document.getElementById("emojiSplash");
-          const viewportHeight = window.innerHeight;
+        // 💥 Silent explosion
+        function explodeHeart() {
+          const rect = heartElement.getBoundingClientRect();
+          const centerX = rect.left + rect.width / 2;
+          const centerY = rect.top + rect.height / 2;
+          createBouncingEmoji(centerX, centerY);
+        }
 
-          // Get click coordinates
-          let clickX, clickY;
-          if (e.touches) {
-            // Touch event
-            clickX = e.touches[0].clientX;
-            clickY = e.touches[0].clientY;
-          } else {
-            // Mouse event
-            clickX = e.clientX;
-            clickY = e.clientY;
+        // ✨ HEARTBEAT + GROWTH
+        function handleHeartTap(e) {
+          if (exploded) return;
+
+          e.preventDefault?.();
+          e.stopPropagation?.();
+
+          if (window.navigator?.vibrate) window.navigator.vibrate(4);
+
+          heartElement.classList.add("heart-beat-silky");
+          setTimeout(() => {
+            heartElement.classList.remove("heart-beat-silky");
+          }, 900);
+
+          tapCount++;
+          currentScale = 1 + Math.pow(tapCount * 0.22, 1.1);
+          heartElement.style.transform = `scale(${currentScale})`;
+          
+          if (tapCount >= MAX_TAPS && !exploded) {
+            exploded = true;
+            
+            explodeHeart();
+            
+            heartElement.style.transition = "opacity 0.4s cubic-bezier(0.34, 1.2, 0.64, 1), transform 0.3s";
+            heartElement.style.opacity = "0";
+            heartElement.style.transform = "scale(2.8)";
+            
+            setTimeout(() => {
+              heartTouch.style.display = "none";
+            }, 250);
+            
+            secretLetter.classList.add("show");
           }
+        }
 
-          // Generate 8-12 emoji per click
-          const count = 8 + Math.floor(Math.random() * 8);
+        heartTouch.addEventListener("click", handleHeartTap);
+        heartTouch.addEventListener("touchstart", function(e) {
+          if (!exploded) e.preventDefault();
+        }, { passive: false });
+
+        // ---------- 🎆 FIREWORK · click background -> explode from click point ----------
+        const fireworkEmojis = [
+          "❤️", "🧡", "💛", "💚", "💙", "💜", "💕", "💞", "💓", "💗", "💖", "💘", "💝",
+          "🌸", "🌹", "🌷", "🌺", "💐", "🫶", "🐇", "🐰", "✨", "⭐", "💫", "🎀", "🎈"
+        ];
+
+        function createFirework(x, y) {
+          const container = document.getElementById("fireworkContainer");
+          const count = 26 + Math.floor(Math.random() * 20); // 26-46 emoji per click
 
           for (let i = 0; i < count; i++) {
             const emoji = document.createElement("div");
-            emoji.className = "float-emoji";
-
-            // Randomly select from heart & bunny collection
-            const randomIndex = Math.floor(
-              Math.random() * heartAndBunnyEmojis.length,
-            );
-            emoji.textContent = heartAndBunnyEmojis[randomIndex];
-
-            // Spread around click position
-            const offsetX = (Math.random() - 0.5) * 120;
-            const offsetY = (Math.random() - 0.5) * 80;
-
-            emoji.style.left = clickX + offsetX + "px";
-            emoji.style.top = clickY + offsetY + "px";
-
-            // Slightly smaller size for click emoji
-            const size = 24 + Math.floor(Math.random() * 22);
+            emoji.className = "firework-emoji";
+            
+            const randomIndex = Math.floor(Math.random() * fireworkEmojis.length);
+            emoji.textContent = fireworkEmojis[randomIndex];
+            
+            // position at click point
+            emoji.style.left = x + "px";
+            emoji.style.top = y + "px";
+            
+            // random size
+            const size = 20 + Math.floor(Math.random() * 36);
             emoji.style.fontSize = size + "px";
-
-            // Random animation duration
-            const duration = 2.2 + Math.random() * 1.8;
-            emoji.style.animationDuration = duration + "s";
-
-            // Random delay
-            const delay = Math.random() * 0.4;
-            emoji.style.animationDelay = delay + "s";
-
-            // Softer shadow
-            emoji.style.filter = `drop-shadow(0 6px 10px rgba(200, 80, 100, 0.2))`;
-
+            
+            // random direction offsets (3 keyframes for silky path)
+            const dx1 = (Math.random() - 0.5) * 140;
+            const dy1 = (Math.random() - 0.5) * 140 - 60; // upward bias
+            const dx2 = dx1 * 1.6 + (Math.random() - 0.5) * 60;
+            const dy2 = dy1 * 1.6 - 40 + (Math.random() - 0.5) * 50;
+            const dx3 = dx2 * 1.3 + (Math.random() - 0.5) * 80;
+            const dy3 = dy2 * 1.3 - 60 + (Math.random() - 0.5) * 60;
+            
+            const rot1 = Math.random() * 60 - 30;
+            const rot2 = rot1 * 1.5 + (Math.random() * 40 - 20);
+            const rot3 = rot2 * 1.2 + (Math.random() * 60 - 30);
+            
+            emoji.style.setProperty('--dx1', dx1 + 'px');
+            emoji.style.setProperty('--dy1', dy1 + 'px');
+            emoji.style.setProperty('--dx2', dx2 + 'px');
+            emoji.style.setProperty('--dy2', dy2 + 'px');
+            emoji.style.setProperty('--dx3', dx3 + 'px');
+            emoji.style.setProperty('--dy3', dy3 + 'px');
+            emoji.style.setProperty('--rot1', rot1 + 'deg');
+            emoji.style.setProperty('--rot2', rot2 + 'deg');
+            emoji.style.setProperty('--rot3', rot3 + 'deg');
+            
+            // random duration for variety
+            const duration = 1.8 + Math.random() * 1.2;
+            emoji.style.animationDuration = duration + 's';
+            
+            // random delay
+            const delay = Math.random() * 0.15;
+            emoji.style.animationDelay = delay + 's';
+            
             container.appendChild(emoji);
-
-            // Remove after animation
-            setTimeout(
-              () => {
-                if (emoji.parentNode) {
-                  emoji.remove();
-                }
-              },
-              (duration + delay) * 1000 + 200,
-            );
-          }
-        }
-
-        // Haptic feedback simulation
-        function hapticLight() {
-          const btn = document.getElementById("envelopeBtn");
-          btn.style.transition = "transform 0.05s";
-          btn.style.transform = "scale(0.96)";
-          setTimeout(() => {
-            btn.style.transform = "scale(1)";
+            
+            // remove after animation
             setTimeout(() => {
-              btn.style.transition = "transform 0.2s ease";
-            }, 20);
-          }, 50);
-          if (window.navigator && window.navigator.vibrate) {
-            window.navigator.vibrate(8);
+              if (emoji.parentNode) emoji.remove();
+            }, (duration + delay) * 1000 + 200);
           }
         }
 
-        // Envelope open
-        const envelope = document.getElementById("envelope");
-        const envelopeBtn = document.getElementById("envelopeBtn");
-        const envelopeHint = document.getElementById("envelopeHint");
-        let isOpen = false;
-
-        function openEnvelope() {
-          hapticLight();
-
-          if (!isOpen) {
-            envelope.classList.add("open");
-            envelopeHint.innerText = "💗  To Luna  💗";
-            isOpen = true;
-            splashEmojis(42, valentineEmojis, true); // Romantic burst
-          } else {
-            splashEmojis(28, valentineEmojis, true); // Each tap adds more flying emoji
-            envelopeHint.innerText = "💕  Love keep flying!  💕";
-          }
-        }
-
-        envelopeBtn.addEventListener("click", openEnvelope);
-        envelopeBtn.addEventListener(
-          "touchstart",
-          function (e) {
-            hapticLight();
-          },
-          { passive: true },
-        );
-
-        // ---------- ✨✨✨ Add click event to entire document for hearts & bunnies ✨✨✨ ----------
-        document.addEventListener("click", function (e) {
-          // Prevent envelope button from triggering twice
-          if (!e.target.closest(".envelope-wrapper")) {
-            createClickEmoji(e);
+        // ---------- 🎯 CLICK ANYWHERE EXCEPT HEART -> firework explosion ----------
+        document.addEventListener("click", function(e) {
+          if (!e.target.closest(".heart-touch")) {
+            const x = e.clientX;
+            const y = e.clientY;
+            createFirework(x, y);
           }
         });
 
-        document.addEventListener(
-          "touchstart",
-          function (e) {
-            // Prevent envelope button from triggering twice on touch
-            if (!e.target.closest(".envelope-wrapper")) {
-              createClickEmoji(e);
-            }
-          },
-          { passive: true },
-        );
+        document.addEventListener("touchstart", function(e) {
+          if (!e.target.closest(".heart-touch")) {
+            e.preventDefault();
+            const x = e.touches[0].clientX;
+            const y = e.touches[0].clientY;
+            createFirework(x, y);
+          }
+        }, { passive: false });
 
-        // Page load: gently float some emoji as welcome
+        // ---------- welcome firework (gentle entrance) ----------
         window.addEventListener("load", () => {
           setTimeout(() => {
-            splashEmojis(18, valentineEmojis, true);
+            // center of screen
+            const x = window.innerWidth / 2;
+            const y = window.innerHeight / 2;
+            createFirework(x, y);
           }, 600);
         });
 
-        // ---------- 🎵🎵🎵 ADDED: Background music controller · local mp3 file ----------
-        // Get audio element and buttons
+        // ---------- music autoplay ----------
         const bgAudio = document.getElementById('bgMusic');
-        const playBtn = document.getElementById('playMusicBtn');
-        const pauseBtn = document.getElementById('pauseMusicBtn');
-        const musicStatus = document.getElementById('musicStatus');
-
-        // Check if audio element is ready
-        if (bgAudio) {
-          // When play button clicked – play local music.mp3
-          playBtn.addEventListener('click', function(e) {
-            bgAudio.play().then(() => {
-              musicStatus.innerHTML = '🎶 melody playing · music.mp3';
-              musicStatus.style.color = '#9e3a3a';
-              // Also splash some music note emoji for fun (small romantic touch)
-              splashEmojis(12, ['🎵','🎶','🎼','🎹','🎻','🥁','🎷','🎸','💕','🌹'], true);
-            }).catch(error => {
-              console.log('Playback prevented until user interaction:', error);
-              musicStatus.innerHTML = '⚠️ tap again to play (autoplay policy)';
-              musicStatus.style.color = '#a14545';
-            });
-            // prevent double emoji from document click (stopPropagation not needed, but avoid conflict)
-            e.stopPropagation(); 
-          });
-
-          // When pause button clicked – pause the music
-          pauseBtn.addEventListener('click', function(e) {
-            bgAudio.pause();
-            musicStatus.innerHTML = '🔇 paused · local music.mp3';
-            musicStatus.style.color = '#875050';
-            e.stopPropagation();
-          });
-
-          // Optional: when audio ends, update status
-          bgAudio.addEventListener('ended', function() {
-            musicStatus.innerHTML = '✨ loop again · music.mp3';
-            // replay if loop is set but just in case
-          });
-          
-          // if audio plays successfully
-          bgAudio.addEventListener('play', function() {
-            musicStatus.innerHTML = '🎶 melody playing · music.mp3';
-            musicStatus.style.color = '#9e3a3a';
-          });
-          
-          bgAudio.addEventListener('pause', function() {
-            musicStatus.innerHTML = '🔇 paused · local music.mp3';
-            musicStatus.style.color = '#875050';
-          });
+        function attemptAutoplay() {
+          if (bgAudio) bgAudio.play().catch(() => {});
         }
-        // ---------- 🎵 End of background music feature ----------
+        if (bgAudio) {
+          bgAudio.load();
+          attemptAutoplay();
+          const startMusicOnInteraction = function() {
+            if (bgAudio.paused) bgAudio.play().catch(() => {});
+            document.removeEventListener('click', startMusicOnInteraction);
+            document.removeEventListener('touchstart', startMusicOnInteraction);
+          };
+          document.addEventListener('click', startMusicOnInteraction);
+          document.addEventListener('touchstart', startMusicOnInteraction);
+        }
 
       })();
     </script>
 
     <style>
-      /* Fine-tuning */
-      .envelope.open .seal {
-        opacity: 0;
-        transform: scale(0.75);
-        transition:
-          opacity 0.25s,
-          transform 0.3s;
-      }
       .time-number {
         -webkit-text-fill-color: transparent;
       }
-      .emoji-splash-container {
+      .bounce-container,
+      .firework-container {
         pointer-events: none;
       }
-      /* Dynamic Island adaptation */
       @supports (padding-top: env(safe-area-inset-top)) {
         .valentine-card {
           margin-top: env(safe-area-inset-top, 0);
           margin-bottom: env(safe-area-inset-bottom, 0);
         }
       }
-      /* music button fine-tune */
-      .music-controls {
-        flex-wrap: wrap;
+      .secret-letter {
+        font-family: 'Caveat', cursive;
+        font-weight: 500;
       }
-      .music-btn {
-        min-width: 130px;
-        justify-content: center;
+      .heart-touch {
+        transition: all 0.2s;
+      }
+      .heart-hint {
+        display: none !important;
+      }
+      /* ultra compact card */
+      .valentine-card {
+        padding-bottom: 18px;
+      }
+      /* smaller romantic quote spacing */
+      .romantic-quote {
+        margin-bottom: 0;
       }
     </style>
   </body>
