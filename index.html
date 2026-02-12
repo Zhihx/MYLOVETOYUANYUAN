@@ -1,0 +1,874 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover"
+    />
+    <title>A little gift to Bunny</title>
+
+    <!-- 🌹 Elegant & highly readable font system · Balancing handwritten romance and screen clarity 🌹 -->
+    <!-- 1. Body/slogan: modern sans-serif · elegant and light -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Montserrat:wght@300;400;500;600&family=Quicksand:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <!-- 2. Handwritten but legible: for love letter inside & signature · not overly ornate -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600&family=Patrick+Hand&family=Kalam:wght@300;400&display=swap"
+      rel="stylesheet"
+    />
+    <!-- 3. Classic serif · for time numbers, dignified and clear -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=EB+Garamond:wght@500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      /* reset & romantic atmosphere — optimized for iPhone 16 OLED */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        width: 100%;
+        min-height: 100vh;
+        background: radial-gradient(circle at 50% 30%, #ffdfe6, #fec5cb);
+        font-family:
+          "Inter",
+          "Montserrat",
+          "Quicksand",
+          -apple-system,
+          BlinkMacSystemFont,
+          sans-serif;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 16px;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        text-rendering: optimizeLegibility;
+        /* Adapt to iPhone Dynamic Island & bottom */
+        padding-top: env(safe-area-inset-top, 16px);
+        padding-bottom: env(safe-area-inset-bottom, 16px);
+      }
+
+      /* Main card — delicate frosted glass */
+      .valentine-card {
+        max-width: 400px;
+        width: 100%;
+        background: rgba(255, 248, 245, 0.78);
+        backdrop-filter: blur(22px);
+        -webkit-backdrop-filter: blur(22px);
+        border-radius: 52px;
+        border: 1px solid rgba(255, 200, 200, 0.6);
+        box-shadow:
+          0 28px 50px rgba(160, 70, 70, 0.15),
+          0 8px 18px rgba(255, 170, 170, 0.25),
+          inset 0 0 0 1.5px rgba(255, 255, 255, 0.8);
+        padding: 36px 26px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s cubic-bezier(0.3, 0.8, 0.4, 1);
+      }
+
+      /* Decorative elements — minimal visual distraction */
+      .petal {
+        position: absolute;
+        background: rgba(255, 180, 180, 0.3);
+        width: 18px;
+        height: 18px;
+        border-radius: 100% 0 100% 0;
+        transform: rotate(45deg);
+        top: 15px;
+        left: 20px;
+        opacity: 0.3;
+        filter: blur(8px);
+      }
+      .petal2 {
+        top: auto;
+        bottom: 15px;
+        right: 15px;
+        width: 26px;
+        height: 26px;
+        background: rgba(255, 140, 160, 0.25);
+      }
+
+      /* Envelope area */
+      .envelope-section {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 16px;
+        position: relative;
+      }
+
+      .envelope-wrapper {
+        position: relative;
+        width: 190px;
+        height: 148px;
+        cursor: pointer;
+        transition: transform 0.2s cubic-bezier(0.2, 0.9, 0.4, 1);
+        margin: 10px 0 8px;
+        -webkit-tap-highlight-color: transparent;
+      }
+      .envelope-wrapper:active {
+        transform: scale(0.96);
+      }
+
+      .envelope {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: #ffe5e5;
+        border-radius: 20px 20px 16px 16px;
+        box-shadow:
+          0 10px 0 #d6a0a0,
+          0 18px 35px rgba(140, 70, 70, 0.2);
+        border: 1px solid #ffbebe;
+        overflow: hidden;
+      }
+
+      .flap {
+        position: absolute;
+        top: -8px;
+        left: 0;
+        width: 100%;
+        height: 54px;
+        background: #ffd6d6;
+        clip-path: polygon(0% 0%, 100% 0%, 50% 70%);
+        transform-origin: top;
+        transition: transform 0.6s cubic-bezier(0.3, 1.3, 0.5, 1);
+        border-bottom: 2px solid #ffaaaa;
+        z-index: 5;
+      }
+
+      .envelope.open .flap {
+        transform: rotateX(180deg);
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      .seal {
+        position: absolute;
+        top: 18px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 38px;
+        height: 38px;
+        background: #ff4f6c;
+        border-radius: 50% 50% 0 0;
+        z-index: 10;
+        transition: all 0.3s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 6px 14px rgba(255, 40, 80, 0.4);
+      }
+      .seal::before,
+      .seal::after {
+        content: "";
+        position: absolute;
+        width: 38px;
+        height: 38px;
+        background: #ff4f6c;
+        border-radius: 50%;
+      }
+      .seal::before {
+        left: -20px;
+      }
+      .seal::after {
+        right: -20px;
+      }
+      .seal span {
+        position: relative;
+        z-index: 12;
+        color: white;
+        font-size: 24px;
+      }
+
+      /* Love letter inside — using handwritten but clear fonts */
+      .letter-inside {
+        position: absolute;
+        top: 14px;
+        left: 12px;
+        width: calc(100% - 24px);
+        height: calc(100% - 24px);
+        background: #fffcf7;
+        border-radius: 16px;
+        padding: 20px 12px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        box-shadow:
+          inset 0 0 0 1px #ffe0e0,
+          inset 0 0 20px #ffe7e7;
+        transform: translateY(24px);
+        opacity: 0;
+        transition: all 0.5s cubic-bezier(0.2, 1, 0.3, 1) 0.1s;
+        z-index: 1;
+      }
+      .envelope.open .letter-inside {
+        transform: translateY(0);
+        opacity: 1;
+      }
+
+      .letter-emoji {
+        font-size: 28px;
+        margin-bottom: 10px;
+        letter-spacing: 10px;
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Apple Color Emoji", sans-serif;
+      }
+
+      /* ✍️ Love letter text: Caveat — handwritten feel but very clear, elegant and readable */
+      .letter-message {
+        font-size: 20px;
+        color: #8a4242;
+        font-weight: 500;
+        text-align: center;
+        font-family: "Caveat", "Patrick Hand", "Kalam", cursive;
+        line-height: 1.4;
+        letter-spacing: 1.2px;
+        text-shadow: 0 2px 4px rgba(255, 210, 210, 0.2);
+        word-break: break-word;
+      }
+
+      .envelope-text {
+        margin-top: 14px;
+        color: #8a4b4b;
+        font-weight: 500;
+        font-size: 15px;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        font-family: "Inter", "Montserrat", sans-serif;
+      }
+
+      /* ----- Time section · numbers use classic serif, dignified and clear ----- */
+      .time-section {
+        width: 100%;
+        background: rgba(255, 250, 242, 0.7);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+        border-radius: 68px;
+        padding: 26px 20px;
+        margin: 22px 0 16px;
+        border: 1px solid rgba(255, 190, 190, 0.6);
+        box-shadow:
+          inset 0 4px 12px rgba(255, 255, 255, 0.8),
+          0 14px 28px rgba(150, 80, 80, 0.12);
+      }
+
+      .time-label {
+        font-family: "Inter", "Montserrat", sans-serif;
+        font-size: 17px;
+        font-weight: 600;
+        color: #683838;
+        letter-spacing: 2.5px;
+        text-transform: uppercase;
+        margin-bottom: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+      }
+      .time-label span {
+        font-size: 26px;
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Apple Color Emoji", sans-serif;
+      }
+
+      .time-display {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: baseline;
+        gap: 12px 20px;
+        background: rgba(255, 242, 242, 0.6);
+        padding: 20px 12px;
+        border-radius: 80px;
+        border: 1px dashed #d68a8a;
+      }
+
+      .time-unit {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-width: 70px;
+      }
+
+      /* Numbers use Cormorant Garamond — classic elegance, excellent readability */
+      .time-number {
+        font-size: 42px;
+        font-weight: 700;
+        font-family: "Cormorant Garamond", "EB Garamond", serif;
+        color: #722a2a;
+        line-height: 0.9;
+        text-shadow: 0 3px 8px rgba(255, 160, 160, 0.4);
+        background: linear-gradient(145deg, #9f4040, #6b2a2a);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        letter-spacing: 1.5px;
+      }
+
+      .time-label-small {
+        font-size: 13px;
+        color: #8a5050;
+        margin-top: 6px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 2.5px;
+        font-family: "Inter", "Montserrat", sans-serif;
+      }
+
+      /* ----- Romantic quote · also using Caveat, elegant and readable ----- */
+      .romantic-quote {
+        font-family: "Caveat", "Patrick Hand", cursive;
+        font-size: 26px;
+        font-weight: 500;
+        color: #6a3a3a;
+        margin: 16px 0 8px;
+        text-align: center;
+        border-top: 1px solid rgba(255, 150, 150, 0.4);
+        padding-top: 24px;
+        line-height: 1.35;
+        letter-spacing: 1.2px;
+      }
+
+      .signature {
+        font-family: "Caveat", "Kalam", cursive;
+        font-size: 22px;
+        font-weight: 400;
+        margin-top: 8px;
+        color: #9a5e5e;
+        letter-spacing: 1.8px;
+      }
+
+      /* 🌟🌟🌟 Special dedication —— MYLOVETOYUANYUAN 🌟🌟🌟 */
+      .dedication {
+        font-family: "Inter", "Montserrat", sans-serif;
+        font-size: 18px;
+        font-weight: 600;
+        color: #a14242;
+        text-align: center;
+        letter-spacing: 4px;
+        text-transform: uppercase;
+        margin: 12px 0 8px;
+        padding: 10px 18px;
+        background: rgba(255, 230, 230, 0.5);
+        border-radius: 40px;
+        backdrop-filter: blur(6px);
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        box-shadow: 0 2px 8px rgba(180, 100, 100, 0.1);
+        word-break: break-word;
+      }
+
+      .hint {
+        color: #9e5a5a;
+        font-size: 14px;
+        margin-top: 8px;
+        font-weight: 500;
+        background: rgba(255, 240, 240, 0.7);
+        padding: 10px 24px;
+        border-radius: 60px;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.9);
+        font-family: "Inter", "Montserrat", sans-serif;
+        letter-spacing: 1.8px;
+      }
+
+      .heart-beat {
+        display: inline-block;
+        animation: pulse 1.8s infinite;
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Apple Color Emoji", sans-serif;
+      }
+      @keyframes pulse {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.2);
+        }
+      }
+
+      /* ---------- 🌈 EMOJI JUMP AREA · NEW: Fly from bottom to top + fade out + smaller size ---------- */
+      .emoji-splash-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 1000;
+        overflow: hidden;
+      }
+
+      .float-emoji {
+        position: absolute;
+        font-size: 32px; /* Smaller emoji size, elegant and delicate */
+        animation: floatUpFade 3s ease-out forwards;
+        filter: drop-shadow(0 6px 12px rgba(190, 70, 90, 0.2));
+        will-change: transform, opacity;
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Apple Color Emoji",
+          "Segoe UI Emoji", sans-serif;
+        font-weight: 400;
+        text-rendering: optimizeLegibility;
+        -webkit-font-smoothing: antialiased;
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+        transform: translateZ(0);
+        opacity: 0.9;
+      }
+
+      /* 🌟 Single animation: fly from bottom to top, gradually fade out */
+      @keyframes floatUpFade {
+        0% {
+          transform: translateY(0) scale(0.7) rotate(0deg);
+          opacity: 0.9;
+        }
+        20% {
+          transform: translateY(-25vh) scale(0.9) rotate(8deg);
+          opacity: 0.8;
+        }
+        50% {
+          transform: translateY(-55vh) scale(1) rotate(-5deg);
+          opacity: 0.6;
+        }
+        80% {
+          transform: translateY(-85vh) scale(0.9) rotate(6deg);
+          opacity: 0.3;
+        }
+        100% {
+          transform: translateY(-120vh) scale(0.7) rotate(0deg);
+          opacity: 0;
+        }
+      }
+
+      /* Ensure all emoji render with Apple native style */
+      .letter-emoji,
+      .time-label span,
+      .heart-beat,
+      .hint,
+      .float-emoji,
+      .seal span {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Apple Color Emoji",
+          "Segoe UI Emoji", sans-serif !important;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Floating emoji container · flying from bottom to top -->
+    <div class="emoji-splash-container" id="emojiSplash"></div>
+
+    <main class="valentine-card">
+      <!-- Gentle decorations -->
+      <div class="petal"></div>
+      <div class="petal petal2"></div>
+
+      <!-- Envelope interaction area -->
+      <div class="envelope-section">
+        <div class="envelope-wrapper" id="envelopeBtn">
+          <div class="envelope" id="envelope">
+            <div class="flap"></div>
+            <div class="seal">
+              <span>❤️</span>
+            </div>
+            <!-- Love letter inside · clear handwritten font -->
+            <div class="letter-inside">
+              <div class="letter-message">
+                you are my today<br />and all of my tomorrows
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="romantic-quote" id="envelopeHint">
+          ✉️ tap the envelope ✉️
+        </div>
+      </div>
+
+      <!-- Time counter · starting from 2024.12.14 00:00 -->
+      <div class="time-section">
+        <div class="romantic-quote"><span>⏳</span> We are <span>⏳</span></div>
+        <div class="time-display" id="timeDisplay">
+          <div class="time-unit">
+            <span class="time-number" id="days">0</span>
+            <span class="time-label-small">days</span>
+          </div>
+          <div class="time-unit">
+            <span class="time-number" id="hours">0</span>
+            <span class="time-label-small">hours</span>
+          </div>
+          <div class="time-unit">
+            <span class="time-number" id="minutes">0</span>
+            <span class="time-label-small">minutes</span>
+          </div>
+          <div class="time-unit">
+            <span class="time-number" id="seconds">0</span>
+            <span class="time-label-small">seconds</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Romantic poem · clear handwritten font -->
+      <div class="romantic-quote">
+        “in case you ever foolishly forget, <br />i am never not thinking of
+        you.”
+        <div class="signature">— from the moment we started</div>
+      </div>
+
+      <!-- 🌟🌟🌟 Special dedication · elegant and eye-catching · MYLOVETOYUANYUAN 🌟🌟🌟 -->
+      <div class="signature">MYLOVETOYUANYUAN</div>
+
+      <!-- Light hint -->
+      <div class="signature">
+        <span class="heart-beat">❤️</span> Always~~
+        <span class="heart-beat">❤️</span>
+      </div>
+    </main>
+
+    <script>
+      (function () {
+        "use strict";
+
+        // ---------- Time together counter (2024.12.14 00:00) ----------
+        const startDate = new Date(2024, 11, 14, 0, 0, 0);
+
+        function updateTimeCounter() {
+          const now = new Date();
+          const diffMs = now - startDate;
+          if (diffMs < 0) {
+            document.getElementById("days").innerText = "0";
+            document.getElementById("hours").innerText = "0";
+            document.getElementById("minutes").innerText = "0";
+            document.getElementById("seconds").innerText = "0";
+            return;
+          }
+          const totalSeconds = Math.floor(diffMs / 1000);
+          const days = Math.floor(totalSeconds / 86400);
+          const hours = Math.floor((totalSeconds % 86400) / 3600);
+          const minutes = Math.floor((totalSeconds % 3600) / 60);
+          const seconds = totalSeconds % 60;
+          document.getElementById("days").innerText = days;
+          document.getElementById("hours").innerText = hours;
+          document.getElementById("minutes").innerText = minutes;
+          document.getElementById("seconds").innerText = seconds;
+        }
+        updateTimeCounter();
+        setInterval(updateTimeCounter, 1000);
+
+        // ---------- 💖 Valentine's exclusive emoji · only romantic/festive atmosphere ----------
+        const valentineEmojis = [
+          "❤️",
+          "🧡",
+          "💛",
+          "💚",
+          "💙",
+          "💜",
+          "💕",
+          "💞",
+          "💓",
+          "💗",
+          "💖",
+          "💘",
+          "💝",
+          "💟",
+          "❤️‍🔥",
+          "🩷",
+          "🩵",
+          "🌸",
+          "🌹",
+          "🌷",
+          "🌺",
+          "💐",
+          "🥀",
+          "🍫",
+          "🍰",
+          "🍓",
+          "🍒",
+          "💌",
+          "💋",
+          "👩‍❤️‍👨",
+          "💑",
+          "💏",
+          "🫶",
+          "🐇",
+          "🕊️",
+          "🦋",
+          "✨",
+          "⭐",
+          "🌠",
+          "💫",
+          "🎀",
+          "🎁",
+          "🎈",
+          "🏵️",
+          "☁️",
+          "🌈",
+          "🌙",
+        ];
+
+        // ---------- 🐰 Special emoji collection for click: hearts & bunnies ----------
+        const heartAndBunnyEmojis = [
+          "❤️",
+          "🧡",
+          "💛",
+          "💚",
+          "💙",
+          "💜",
+          "🩷",
+          "💖",
+          "💘",
+          "💝",
+          "❤️‍🔥",
+          "🫶",
+          "🐇",
+          "🐰",
+          "🐇",
+          "🐰",
+          "🌸",
+          "🌹",
+        ];
+
+        // ---------- 🌅 EMOJI fly from bottom to top · smaller size · fade out ----------
+        function splashEmojis(
+          count = 30,
+          emojiSet = valentineEmojis,
+          fromBottom = true,
+        ) {
+          const container = document.getElementById("emojiSplash");
+          const viewportWidth = window.innerWidth;
+          const viewportHeight = window.innerHeight;
+
+          // Starting position: bottom of screen (20px above bottom ~ lower middle)
+          const startYBase = viewportHeight - 40;
+
+          for (let i = 0; i < count; i++) {
+            const emoji = document.createElement("div");
+            emoji.className = "float-emoji";
+
+            const randomIndex = Math.floor(Math.random() * emojiSet.length);
+            emoji.textContent = emojiSet[randomIndex];
+
+            // Random horizontal position (across screen width)
+            const posX =
+              Math.random() * viewportWidth * 0.9 + viewportWidth * 0.05;
+
+            let posY;
+            if (fromBottom) {
+              // Start Y: from different heights at bottom, create layered effect
+              posY = startYBase - Math.random() * 60;
+            } else {
+              // For click events: use provided Y position (will be set outside)
+              posY = startYBase - Math.random() * 60; // fallback
+            }
+
+            emoji.style.left = posX + "px";
+            emoji.style.top = posY + "px";
+
+            // Smaller emoji size: 26px ~ 42px, more delicate
+            const size = 26 + Math.floor(Math.random() * 18);
+            emoji.style.fontSize = size + "px";
+
+            // Random animation duration: 2.5s ~ 4s, different flight speeds
+            const duration = 2.5 + Math.random() * 1.8;
+            emoji.style.animationDuration = duration + "s";
+
+            // Random delay, avoid taking off simultaneously
+            const delay = Math.random() * 0.8;
+            emoji.style.animationDelay = delay + "s";
+
+            // Very light shadow
+            emoji.style.filter = `drop-shadow(0 4px 8px rgba(180, 70, 80, 0.15))`;
+
+            container.appendChild(emoji);
+
+            // Remove element after animation ends
+            setTimeout(
+              () => {
+                if (emoji.parentNode) {
+                  emoji.remove();
+                }
+              },
+              (duration + delay) * 1000 + 200,
+            );
+          }
+        }
+
+        // ---------- ✨ NEW: Click anywhere on screen to pop hearts & bunnies emoji ----------
+        function createClickEmoji(e) {
+          const container = document.getElementById("emojiSplash");
+          const viewportHeight = window.innerHeight;
+
+          // Get click coordinates
+          let clickX, clickY;
+          if (e.touches) {
+            // Touch event
+            clickX = e.touches[0].clientX;
+            clickY = e.touches[0].clientY;
+          } else {
+            // Mouse event
+            clickX = e.clientX;
+            clickY = e.clientY;
+          }
+
+          // Generate 8-12 emoji per click
+          const count = 8 + Math.floor(Math.random() * 8);
+
+          for (let i = 0; i < count; i++) {
+            const emoji = document.createElement("div");
+            emoji.className = "float-emoji";
+
+            // Randomly select from heart & bunny collection
+            const randomIndex = Math.floor(
+              Math.random() * heartAndBunnyEmojis.length,
+            );
+            emoji.textContent = heartAndBunnyEmojis[randomIndex];
+
+            // Spread around click position
+            const offsetX = (Math.random() - 0.5) * 120;
+            const offsetY = (Math.random() - 0.5) * 80;
+
+            emoji.style.left = clickX + offsetX + "px";
+            emoji.style.top = clickY + offsetY + "px";
+
+            // Slightly smaller size for click emoji
+            const size = 24 + Math.floor(Math.random() * 22);
+            emoji.style.fontSize = size + "px";
+
+            // Random animation duration
+            const duration = 2.2 + Math.random() * 1.8;
+            emoji.style.animationDuration = duration + "s";
+
+            // Random delay
+            const delay = Math.random() * 0.4;
+            emoji.style.animationDelay = delay + "s";
+
+            // Softer shadow
+            emoji.style.filter = `drop-shadow(0 6px 10px rgba(200, 80, 100, 0.2))`;
+
+            container.appendChild(emoji);
+
+            // Remove after animation
+            setTimeout(
+              () => {
+                if (emoji.parentNode) {
+                  emoji.remove();
+                }
+              },
+              (duration + delay) * 1000 + 200,
+            );
+          }
+        }
+
+        // Haptic feedback simulation
+        function hapticLight() {
+          const btn = document.getElementById("envelopeBtn");
+          btn.style.transition = "transform 0.05s";
+          btn.style.transform = "scale(0.96)";
+          setTimeout(() => {
+            btn.style.transform = "scale(1)";
+            setTimeout(() => {
+              btn.style.transition = "transform 0.2s ease";
+            }, 20);
+          }, 50);
+          if (window.navigator && window.navigator.vibrate) {
+            window.navigator.vibrate(8);
+          }
+        }
+
+        // Envelope open
+        const envelope = document.getElementById("envelope");
+        const envelopeBtn = document.getElementById("envelopeBtn");
+        const envelopeHint = document.getElementById("envelopeHint");
+        let isOpen = false;
+
+        function openEnvelope() {
+          hapticLight();
+
+          if (!isOpen) {
+            envelope.classList.add("open");
+            envelopeHint.innerText = "💗  To Luna  💗";
+            isOpen = true;
+            splashEmojis(42, valentineEmojis, true); // Romantic burst
+          } else {
+            splashEmojis(28, valentineEmojis, true); // Each tap adds more flying emoji
+            envelopeHint.innerText = "💕  Love keep flying!  💕";
+          }
+        }
+
+        envelopeBtn.addEventListener("click", openEnvelope);
+        envelopeBtn.addEventListener(
+          "touchstart",
+          function (e) {
+            hapticLight();
+          },
+          { passive: true },
+        );
+
+        // ---------- ✨✨✨ Add click event to entire document for hearts & bunnies ✨✨✨ ----------
+        document.addEventListener("click", function (e) {
+          // Prevent envelope button from triggering twice
+          if (!e.target.closest(".envelope-wrapper")) {
+            createClickEmoji(e);
+          }
+        });
+
+        document.addEventListener(
+          "touchstart",
+          function (e) {
+            // Prevent envelope button from triggering twice on touch
+            if (!e.target.closest(".envelope-wrapper")) {
+              createClickEmoji(e);
+            }
+          },
+          { passive: true },
+        );
+
+        // Page load: gently float some emoji as welcome
+        window.addEventListener("load", () => {
+          setTimeout(() => {
+            splashEmojis(18, valentineEmojis, true);
+          }, 600);
+        });
+      })();
+    </script>
+
+    <style>
+      /* Fine-tuning */
+      .envelope.open .seal {
+        opacity: 0;
+        transform: scale(0.75);
+        transition:
+          opacity 0.25s,
+          transform 0.3s;
+      }
+      .time-number {
+        -webkit-text-fill-color: transparent;
+      }
+      .emoji-splash-container {
+        pointer-events: none;
+      }
+      /* Dynamic Island adaptation */
+      @supports (padding-top: env(safe-area-inset-top)) {
+        .valentine-card {
+          margin-top: env(safe-area-inset-top, 0);
+          margin-bottom: env(safe-area-inset-bottom, 0);
+        }
+      }
+    </style>
+  </body>
+</html>
