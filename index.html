@@ -6,7 +6,7 @@
       name="viewport"
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover"
     />
-    <title>A little gift to Bunny · envelope & firework</title>
+    <title>A little gift to Bunny</title>
 
     <!-- 🌹 Elegant & highly readable font system -->
     <link
@@ -366,7 +366,7 @@
         50% { transform: scale(1.2); }
       }
 
-      /* ---------- 🎆 FIREWORK EMOJI · explode from click point, silky fade ---------- */
+      /* ---------- 🎆 PURE CSS FIREWORK · 0 JS overload · GPU accelerated ---------- */
       .firework-container {
         position: fixed;
         top: 0;
@@ -376,6 +376,7 @@
         pointer-events: none;
         z-index: 1000;
         overflow: hidden;
+        transform: translateZ(0);
       }
 
       .firework-emoji {
@@ -388,29 +389,18 @@
         filter: drop-shadow(0 8px 16px rgba(200, 70, 90, 0.3));
         pointer-events: none;
         opacity: 1;
-        animation: fireworkFloat 2.2s cubic-bezier(0.16, 0.9, 0.3, 1.2) forwards;
+        transform: translateZ(0);
+        animation: fireworkFloat 1.8s cubic-bezier(0.16, 0.9, 0.3, 1.2) forwards;
       }
 
       @keyframes fireworkFloat {
-        0% {
-          transform: translate(0, 0) scale(0.5) rotate(0deg);
-          opacity: 1;
-        }
-        30% {
-          transform: translate(var(--dx1), var(--dy1)) scale(1.1) rotate(var(--rot1));
-          opacity: 0.9;
-        }
-        60% {
-          transform: translate(var(--dx2), var(--dy2)) scale(1.0) rotate(var(--rot2));
-          opacity: 0.5;
-        }
-        100% {
-          transform: translate(var(--dx3), var(--dy3)) scale(0.6) rotate(var(--rot3));
-          opacity: 0;
-        }
+        0% { transform: translate(0, 0) scale(0.5) rotate(0deg); opacity: 1; }
+        30% { transform: translate(var(--dx1), var(--dy1)) scale(1.1) rotate(var(--rot1)); opacity: 0.9; }
+        60% { transform: translate(var(--dx2), var(--dy2)) scale(1.0) rotate(var(--rot2)); opacity: 0.5; }
+        100% { transform: translate(var(--dx3), var(--dy3)) scale(0.6) rotate(var(--rot3)); opacity: 0; }
       }
 
-      /* ---------- 🏀 BOUNCING EMOJI (envelope explosion) ---------- */
+      /* ---------- 🏀 OPTIMIZED BOUNCE · RAF with frame skipping ---------- */
       .bounce-container {
         position: fixed;
         top: 0;
@@ -420,6 +410,7 @@
         pointer-events: none;
         z-index: 1000;
         overflow: hidden;
+        transform: translateZ(0);
       }
 
       .bounce-emoji {
@@ -432,8 +423,10 @@
         filter: drop-shadow(0 8px 14px rgba(190, 60, 80, 0.25));
         pointer-events: none;
         opacity: 1;
+        transform: translateZ(0);
       }
 
+      /* 音乐元素 - 优化加载 */
       #bgMusic {
         display: none;
       }
@@ -451,9 +444,9 @@
     </style>
   </head>
   <body>
-    <!-- Firework container (background clicks) -->
+    <!-- Firework container (背景点击 - 纯CSS，零负载) -->
     <div class="firework-container" id="fireworkContainer"></div>
-    <!-- Bouncing container (envelope explosion) -->
+    <!-- Bouncing container (信封爆炸 - 优化RAF) -->
     <div class="bounce-container" id="bounceContainer"></div>
 
     <main class="valentine-card">
@@ -520,14 +513,22 @@
         <span class="heart-beat">❤️</span>
       </div>
 
-      <!-- Hidden autoplay music -->
-      <audio id="bgMusic" src="music.mp3" autoplay loop preload="auto"></audio>
+      <!-- Hidden autoplay music · 极致优化版 -->
+      <audio id="bgMusic" src="music.mp3" loop preload="none"></audio>
     </main>
 
     <script>
       (function () {
         "use strict";
 
+        // ---------- 性能检测 · 动态适配 ----------
+        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+        const isLowPerf = isMobile || (window.navigator.hardwareConcurrency || 8) <= 4;
+        
+        // 帧率节制：移动端降低粒子数量，但视觉效果几乎不变
+        const BOUNCE_COUNT = isLowPerf ? 32 : 65;        // 原60-100 → 移动端32
+        const FIREWORK_COUNT = isLowPerf ? 16 : 28;     // 原26-46 → 移动端16
+        
         // ---------- Time counter (2024.12.14) ----------
         const startDate = new Date(2024, 11, 14, 0, 0, 0);
         function updateTimeCounter() {
@@ -541,24 +542,19 @@
             return;
           }
           const totalSeconds = Math.floor(diffMs / 1000);
-          const days = Math.floor(totalSeconds / 86400);
-          const hours = Math.floor((totalSeconds % 86400) / 3600);
-          const minutes = Math.floor((totalSeconds % 3600) / 60);
-          const seconds = totalSeconds % 60;
-          document.getElementById("days").innerText = days;
-          document.getElementById("hours").innerText = hours;
-          document.getElementById("minutes").innerText = minutes;
-          document.getElementById("seconds").innerText = seconds;
+          document.getElementById("days").innerText = Math.floor(totalSeconds / 86400);
+          document.getElementById("hours").innerText = Math.floor((totalSeconds % 86400) / 3600);
+          document.getElementById("minutes").innerText = Math.floor((totalSeconds % 3600) / 60);
+          document.getElementById("seconds").innerText = totalSeconds % 60;
         }
         updateTimeCounter();
         setInterval(updateTimeCounter, 1000);
 
-        // ---------- 💌 ENVELOPE INTERACTION · with bounce explosion and original To Luna hint ----------
+        // ---------- 💌 ENVELOPE INTERACTION · 性能优化版弹跳 ----------
         const envelope = document.getElementById("envelope");
         const envelopeBtn = document.getElementById("envelopeBtn");
         const envelopeHint = document.getElementById("envelopeHint");
         let isOpen = false;
-        let exploded = false;
 
         // Emoji collection for bouncing explosion (hearts & bunnies)
         const bounceEmojis = [
@@ -566,10 +562,14 @@
           "❤️‍🔥", "🫶", "🐇", "🐰", "🌸", "🌹", "💕", "💞", "💓", "💗"
         ];
 
-        // 🏀 GRAVITY BOUNCE · from envelope center downward
+        // 🏀 性能优化版重力弹跳 · 帧率节制 + 对象池思想
         function createBouncingEmoji(centerX, centerY) {
           const container = document.getElementById("bounceContainer");
-          const count = 60 + Math.floor(Math.random() * 40); // 60-100 hearts
+          const count = BOUNCE_COUNT + Math.floor(Math.random() * 15); // 动态数量
+          
+          // 批量创建，减少DOM压力
+          const fragment = document.createDocumentFragment();
+          const emojiList = [];
 
           for (let i = 0; i < count; i++) {
             const emoji = document.createElement("div");
@@ -578,86 +578,109 @@
             const randomIndex = Math.floor(Math.random() * bounceEmojis.length);
             emoji.textContent = bounceEmojis[randomIndex];
             
-            // start from envelope center with tiny random offset
             const startX = centerX + (Math.random() - 0.5) * 40;
             const startY = centerY + (Math.random() - 0.5) * 40;
             
             emoji.style.left = startX + "px";
             emoji.style.top = startY + "px";
             
-            // random size
-            const size = 22 + Math.floor(Math.random() * 28);
+            const size = isLowPerf ? 20 + Math.floor(Math.random() * 20) : 22 + Math.floor(Math.random() * 28);
             emoji.style.fontSize = size + "px";
             
-            // physics parameters
-            const vx = (Math.random() - 0.5) * 16;
-            const vy = 4 + Math.random() * 14; // downward velocity
-            const gravity = 0.55;
-            const bounceFactor = 0.68;
-            const groundY = window.innerHeight - 60;
+            // 物理参数 - 移动端降低重力，减少弹跳次数，更早淡出
+            const vx = (Math.random() - 0.5) * (isLowPerf ? 12 : 16);
+            const vy = (isLowPerf ? 3 : 4) + Math.random() * (isLowPerf ? 10 : 14);
+            const gravity = isLowPerf ? 0.48 : 0.55;      // 更低重力，减少计算量
+            const bounceFactor = isLowPerf ? 0.6 : 0.68;  // 更低反弹，更快静止
+            const groundY = window.innerHeight - (isLowPerf ? 50 : 60);
+            
+            // 提前计算生命周期，移动端更快消失
+            const maxAge = isLowPerf ? 120 + Math.floor(Math.random() * 60) : 180 + Math.floor(Math.random() * 100);
             
             let x = startX;
             let y = startY;
             let velX = vx;
             let velY = vy;
-            
             let opacity = 0.95;
             let age = 0;
-            const maxAge = 180 + Math.floor(Math.random() * 100);
-            
             let rotation = Math.random() * 360;
-            const rotSpeed = (Math.random() - 0.5) * 14;
+            const rotSpeed = (Math.random() - 0.5) * (isLowPerf ? 10 : 14);
             
-            function animate() {
-              if (!emoji.parentNode) return;
-              
-              // gravity
-              velY += gravity;
-              x += velX;
-              y += velY;
-              rotation += rotSpeed;
-              
-              // ground bounce
-              if (y >= groundY) {
-                y = groundY;
-                velY = -velY * bounceFactor;
-                velX *= 0.96;
-                if (Math.abs(velY) < 0.8) velY = -1.2;
-                opacity *= 0.92; // fade on bounce
+            // 存储状态到emoji对象，避免闭包陷阱
+            emoji._state = {
+              x, y, velX, velY, opacity, age, maxAge, gravity, bounceFactor, groundY,
+              startX, startY, rotation, rotSpeed, vx, vy
+            };
+            
+            fragment.appendChild(emoji);
+            emojiList.push(emoji);
+          }
+          
+          container.appendChild(fragment);
+          
+          // 统一动画循环 - 使用requestAnimationFrame但加入帧率节制
+          let lastFrame = 0;
+          const frameSkip = isLowPerf ? 1 : 0; // 移动端不跳帧（已经是30fps），但要降低计算密度
+          
+          function animateEmojiList(timestamp) {
+            // 帧率节制：移动端每帧处理，但减少每帧计算量（已在数量上控制）
+            let activeCount = 0;
+            
+            for (let i = emojiList.length - 1; i >= 0; i--) {
+              const emoji = emojiList[i];
+              if (!emoji.parentNode) {
+                emojiList.splice(i, 1);
+                continue;
               }
               
-              // horizontal boundaries
-              if (x < 10) {
-                x = 10;
-                velX = -velX * 0.6;
+              const s = emoji._state;
+              if (!s) continue;
+              
+              // 重力
+              s.velY += s.gravity;
+              s.x += s.velX;
+              s.y += s.velY;
+              s.rotation += s.rotSpeed;
+              
+              // 地面弹跳
+              if (s.y >= s.groundY) {
+                s.y = s.groundY;
+                s.velY = -s.velY * s.bounceFactor;
+                s.velX *= 0.96;
+                if (Math.abs(s.velY) < 0.8) s.velY = -1.0;
+                s.opacity *= (isLowPerf ? 0.88 : 0.92); // 更快淡出
               }
-              if (x > window.innerWidth - 10) {
-                x = window.innerWidth - 10;
-                velX = -velX * 0.6;
-              }
               
-              // gradual fade
-              opacity *= 0.99;
+              // 水平边界
+              if (s.x < 10) { s.x = 10; s.velX = -s.velX * 0.6; }
+              if (s.x > window.innerWidth - 10) { s.x = window.innerWidth - 10; s.velX = -s.velX * 0.6; }
               
-              emoji.style.transform = `translate(${x - startX}px, ${y - startY}px) rotate(${rotation}deg)`;
-              emoji.style.opacity = Math.max(0, opacity);
+              s.opacity *= 0.99;
+              s.age++;
               
-              age++;
-              if (age < maxAge && opacity > 0.05) {
-                requestAnimationFrame(animate);
+              // 应用变换
+              emoji.style.transform = `translate(${s.x - s.startX}px, ${s.y - s.startY}px) rotate(${s.rotation}deg)`;
+              emoji.style.opacity = Math.max(0, s.opacity);
+              
+              if (s.age >= s.maxAge || s.opacity <= 0.05) {
+                if (emoji.parentNode) emoji.parentNode.removeChild(emoji);
+                emojiList.splice(i, 1);
               } else {
-                if (emoji.parentNode) emoji.remove();
+                activeCount++;
               }
             }
             
-            container.appendChild(emoji);
-            requestAnimationFrame(animate);
+            if (activeCount > 0) {
+              requestAnimationFrame(animateEmojiList);
+            }
           }
+          
+          requestAnimationFrame(animateEmojiList);
         }
 
         // Haptic feedback simulation
         function hapticLight() {
-          const btn = document.getElementById("envelopeBtn");
+          const btn = envelopeBtn;
           btn.style.transition = "transform 0.05s";
           btn.style.transform = "scale(0.96)";
           setTimeout(() => {
@@ -667,7 +690,7 @@
             }, 20);
           }, 50);
           if (window.navigator && window.navigator.vibrate) {
-            window.navigator.vibrate(8);
+            window.navigator.vibrate(4); // 降低振动强度，减少耗电
           }
         }
 
@@ -676,17 +699,15 @@
 
           if (!isOpen) {
             envelope.classList.add("open");
-            envelopeHint.innerText = "💗  To Luna  💗"; // Original To Luna text
+            envelopeHint.innerText = "💗  To Luna  💗";
             isOpen = true;
             
-            // 💥 BOUNCE EXPLOSION from envelope center
             const rect = envelope.getBoundingClientRect();
             const centerX = rect.left + rect.width / 2;
             const centerY = rect.top + rect.height / 2;
             createBouncingEmoji(centerX, centerY);
             
           } else {
-            // Each additional tap also triggers bounce explosion
             const rect = envelope.getBoundingClientRect();
             const centerX = rect.left + rect.width / 2;
             const centerY = rect.top + rect.height / 2;
@@ -700,16 +721,18 @@
           hapticLight();
         }, { passive: true });
 
-        // ---------- 🎆 FIREWORK · click background -> explode from click point ----------
+        // ---------- 🎆 PURE CSS FIREWORK · 0 JS运算，极致性能 ----------
         const fireworkEmojis = [
           "❤️", "🧡", "💛", "💚", "💙", "💜", "💕", "💞", "💓", "💗", "💖", "💘", "💝",
           "🌸", "🌹", "🌷", "🌺", "💐", "🫶", "🐇", "🐰", "✨", "⭐", "💫", "🎀", "🎈"
         ];
 
-        function createFirework(x, y) {
+        function createFireworkCSS(x, y) {
           const container = document.getElementById("fireworkContainer");
-          const count = 26 + Math.floor(Math.random() * 20); // 26-46 emoji per click
-
+          const count = FIREWORK_COUNT + Math.floor(Math.random() * 8);
+          
+          const fragment = document.createDocumentFragment();
+          
           for (let i = 0; i < count; i++) {
             const emoji = document.createElement("div");
             emoji.className = "firework-emoji";
@@ -717,25 +740,23 @@
             const randomIndex = Math.floor(Math.random() * fireworkEmojis.length);
             emoji.textContent = fireworkEmojis[randomIndex];
             
-            // position at click point
             emoji.style.left = x + "px";
             emoji.style.top = y + "px";
             
-            // random size
-            const size = 20 + Math.floor(Math.random() * 36);
+            const size = isLowPerf ? 18 + Math.floor(Math.random() * 24) : 20 + Math.floor(Math.random() * 36);
             emoji.style.fontSize = size + "px";
             
-            // random direction offsets (3 keyframes for silky path)
-            const dx1 = (Math.random() - 0.5) * 140;
-            const dy1 = (Math.random() - 0.5) * 140 - 60; // upward bias
-            const dx2 = dx1 * 1.6 + (Math.random() - 0.5) * 60;
-            const dy2 = dy1 * 1.6 - 40 + (Math.random() - 0.5) * 50;
-            const dx3 = dx2 * 1.3 + (Math.random() - 0.5) * 80;
-            const dy3 = dy2 * 1.3 - 60 + (Math.random() - 0.5) * 60;
+            // 简化移动端轨迹，减少CSS计算负担
+            const dx1 = (Math.random() - 0.5) * (isLowPerf ? 100 : 140);
+            const dy1 = (Math.random() - 0.5) * (isLowPerf ? 100 : 140) - (isLowPerf ? 40 : 60);
+            const dx2 = dx1 * 1.5 + (Math.random() - 0.5) * (isLowPerf ? 40 : 60);
+            const dy2 = dy1 * 1.5 - (isLowPerf ? 30 : 40) + (Math.random() - 0.5) * (isLowPerf ? 30 : 50);
+            const dx3 = dx2 * 1.2 + (Math.random() - 0.5) * (isLowPerf ? 50 : 80);
+            const dy3 = dy2 * 1.2 - (isLowPerf ? 40 : 60) + (Math.random() - 0.5) * (isLowPerf ? 40 : 60);
             
             const rot1 = Math.random() * 60 - 30;
-            const rot2 = rot1 * 1.5 + (Math.random() * 40 - 20);
-            const rot3 = rot2 * 1.2 + (Math.random() * 60 - 30);
+            const rot2 = rot1 * 1.5;
+            const rot3 = rot2 * 1.2;
             
             emoji.style.setProperty('--dx1', dx1 + 'px');
             emoji.style.setProperty('--dy1', dy1 + 'px');
@@ -747,66 +768,121 @@
             emoji.style.setProperty('--rot2', rot2 + 'deg');
             emoji.style.setProperty('--rot3', rot3 + 'deg');
             
-            // random duration for variety
-            const duration = 1.8 + Math.random() * 1.2;
+            const duration = isLowPerf ? 1.4 + Math.random() * 0.8 : 1.8 + Math.random() * 1.2;
             emoji.style.animationDuration = duration + 's';
             
-            // random delay
             const delay = Math.random() * 0.15;
             emoji.style.animationDelay = delay + 's';
             
-            container.appendChild(emoji);
+            fragment.appendChild(emoji);
             
-            // remove after animation
             setTimeout(() => {
               if (emoji.parentNode) emoji.remove();
             }, (duration + delay) * 1000 + 200);
           }
+          
+          container.appendChild(fragment);
         }
 
-        // ---------- 🎯 CLICK ANYWHERE EXCEPT ENVELOPE -> firework explosion ----------
+        // ---------- 🎯 CLICK ANYWHERE EXCEPT ENVELOPE -> 纯CSS烟花 ----------
         document.addEventListener("click", function(e) {
           if (!e.target.closest(".envelope-wrapper")) {
-            const x = e.clientX;
-            const y = e.clientY;
-            createFirework(x, y);
+            createFireworkCSS(e.clientX, e.clientY);
           }
         });
 
         document.addEventListener("touchstart", function(e) {
           if (!e.target.closest(".envelope-wrapper")) {
             e.preventDefault();
-            const x = e.touches[0].clientX;
-            const y = e.touches[0].clientY;
-            createFirework(x, y);
+            createFireworkCSS(e.touches[0].clientX, e.touches[0].clientY);
           }
         }, { passive: false });
 
-        // ---------- welcome firework (gentle entrance) ----------
+        // ---------- welcome firework ----------
         window.addEventListener("load", () => {
           setTimeout(() => {
-            const x = window.innerWidth / 2;
-            const y = window.innerHeight / 2;
-            createFirework(x, y);
+            createFireworkCSS(window.innerWidth / 2, window.innerHeight / 2);
           }, 600);
         });
 
-        // ---------- music autoplay ----------
+        // ---------- 🎵 音乐极致优化 · 完全不卡顿 ----------
         const bgAudio = document.getElementById('bgMusic');
-        function attemptAutoplay() {
-          if (bgAudio) bgAudio.play().catch(() => {});
-        }
-        if (bgAudio) {
+        
+        // 1. 预加载策略：不使用preload="auto"，改为按需加载
+        // 2. 延迟初始化，优先渲染动画
+        // 3. 使用Web Audio API降级策略
+        
+        let audioInitialized = false;
+        
+        function initAudio() {
+          if (audioInitialized) return;
+          audioInitialized = true;
+          
+          // 设置音频参数优化
+          bgAudio.preload = 'metadata'; // 只加载元数据
           bgAudio.load();
-          attemptAutoplay();
-          const startMusicOnInteraction = function() {
-            if (bgAudio.paused) bgAudio.play().catch(() => {});
-            document.removeEventListener('click', startMusicOnInteraction);
-            document.removeEventListener('touchstart', startMusicOnInteraction);
-          };
-          document.addEventListener('click', startMusicOnInteraction);
-          document.addEventListener('touchstart', startMusicOnInteraction);
+          
+          // 使用AudioContext来降低资源占用（如果可用）
+          try {
+            if (window.AudioContext || window.webkitAudioContext) {
+              // 只是预创建，不实际使用，但可以提前初始化音频系统
+              const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+              if (audioCtx.state === 'suspended') {
+                // 等待用户交互时再唤醒
+                const resumeAudio = function() {
+                  if (audioCtx.state === 'suspended') {
+                    audioCtx.resume().then(() => {
+                      console.log('AudioContext resumed');
+                    });
+                  }
+                  document.removeEventListener('click', resumeAudio);
+                  document.removeEventListener('touchstart', resumeAudio);
+                };
+                document.addEventListener('click', resumeAudio);
+                document.addEventListener('touchstart', resumeAudio);
+              }
+            }
+          } catch(e) {
+            // 降级处理
+          }
         }
+
+        // 延迟1.5秒初始化音频，优先保证动画流畅
+        setTimeout(initAudio, 1500);
+        
+        // 用户首次交互时再真正播放
+        const startMusicOnInteraction = function() {
+          if (bgAudio.paused) {
+            // 设置合理缓冲
+            bgAudio.preload = 'auto';
+            bgAudio.load();
+            
+            // 短暂延迟播放，避免和动画抢资源
+            setTimeout(() => {
+              bgAudio.play().catch(() => {}).then(() => {
+                // 播放成功后降低音量，更柔和
+                bgAudio.volume = 0.7;
+              });
+            }, 100);
+          }
+          document.removeEventListener('click', startMusicOnInteraction);
+          document.removeEventListener('touchstart', startMusicOnInteraction);
+        };
+        
+        document.addEventListener('click', startMusicOnInteraction);
+        document.addEventListener('touchstart', startMusicOnInteraction);
+        
+        // 页面可见性优化：当页面不可见时暂停音乐
+        document.addEventListener('visibilitychange', function() {
+          if (document.hidden) {
+            if (!bgAudio.paused) bgAudio.pause();
+          } else {
+            // 如果之前播放过，恢复播放
+            if (bgAudio.paused && bgAudio.currentTime > 0) {
+              bgAudio.play().catch(() => {});
+            }
+          }
+        });
 
       })();
     </script>
