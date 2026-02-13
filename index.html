@@ -6,7 +6,7 @@
       name="viewport"
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover"
     />
-    <title>A little gift to Bunny</title>
+    <title>A little gift to Bunny · 60fps with scroll</title>
 
     <!-- 🌹 Elegant & highly readable font system -->
     <link
@@ -51,6 +51,9 @@
         text-rendering: optimizeLegibility;
         padding-top: env(safe-area-inset-top, 16px);
         padding-bottom: env(safe-area-inset-bottom, 16px);
+        /* 允许滚动 */
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
       }
 
       /* Main card */
@@ -71,7 +74,7 @@
         flex-direction: column;
         align-items: center;
         position: relative;
-        overflow: hidden;
+        overflow: visible; /* 改为visible，允许内容溢出滚动 */
       }
 
       .petal {
@@ -590,11 +593,10 @@
             // 物理参数 - 移动端降低重力，减少弹跳次数，更早淡出
             const vx = (Math.random() - 0.5) * (isLowPerf ? 12 : 16);
             const vy = (isLowPerf ? 3 : 4) + Math.random() * (isLowPerf ? 10 : 14);
-            const gravity = isLowPerf ? 0.48 : 0.55;      // 更低重力，减少计算量
-            const bounceFactor = isLowPerf ? 0.6 : 0.68;  // 更低反弹，更快静止
+            const gravity = isLowPerf ? 0.48 : 0.55;
+            const bounceFactor = isLowPerf ? 0.6 : 0.68;
             const groundY = window.innerHeight - (isLowPerf ? 50 : 60);
             
-            // 提前计算生命周期，移动端更快消失
             const maxAge = isLowPerf ? 120 + Math.floor(Math.random() * 60) : 180 + Math.floor(Math.random() * 100);
             
             let x = startX;
@@ -606,7 +608,6 @@
             let rotation = Math.random() * 360;
             const rotSpeed = (Math.random() - 0.5) * (isLowPerf ? 10 : 14);
             
-            // 存储状态到emoji对象，避免闭包陷阱
             emoji._state = {
               x, y, velX, velY, opacity, age, maxAge, gravity, bounceFactor, groundY,
               startX, startY, rotation, rotSpeed, vx, vy
@@ -618,12 +619,9 @@
           
           container.appendChild(fragment);
           
-          // 统一动画循环 - 使用requestAnimationFrame但加入帧率节制
-          let lastFrame = 0;
-          const frameSkip = isLowPerf ? 1 : 0; // 移动端不跳帧（已经是30fps），但要降低计算密度
+          let animationFrame = null;
           
-          function animateEmojiList(timestamp) {
-            // 帧率节制：移动端每帧处理，但减少每帧计算量（已在数量上控制）
+          function animateEmojiList() {
             let activeCount = 0;
             
             for (let i = emojiList.length - 1; i >= 0; i--) {
@@ -636,29 +634,25 @@
               const s = emoji._state;
               if (!s) continue;
               
-              // 重力
               s.velY += s.gravity;
               s.x += s.velX;
               s.y += s.velY;
               s.rotation += s.rotSpeed;
               
-              // 地面弹跳
               if (s.y >= s.groundY) {
                 s.y = s.groundY;
                 s.velY = -s.velY * s.bounceFactor;
                 s.velX *= 0.96;
                 if (Math.abs(s.velY) < 0.8) s.velY = -1.0;
-                s.opacity *= (isLowPerf ? 0.88 : 0.92); // 更快淡出
+                s.opacity *= (isLowPerf ? 0.88 : 0.92);
               }
               
-              // 水平边界
               if (s.x < 10) { s.x = 10; s.velX = -s.velX * 0.6; }
               if (s.x > window.innerWidth - 10) { s.x = window.innerWidth - 10; s.velX = -s.velX * 0.6; }
               
               s.opacity *= 0.99;
               s.age++;
               
-              // 应用变换
               emoji.style.transform = `translate(${s.x - s.startX}px, ${s.y - s.startY}px) rotate(${s.rotation}deg)`;
               emoji.style.opacity = Math.max(0, s.opacity);
               
@@ -671,14 +665,14 @@
             }
             
             if (activeCount > 0) {
-              requestAnimationFrame(animateEmojiList);
+              animationFrame = requestAnimationFrame(animateEmojiList);
             }
           }
           
-          requestAnimationFrame(animateEmojiList);
+          animationFrame = requestAnimationFrame(animateEmojiList);
         }
 
-        // Haptic feedback simulation
+        // Haptic feedback simulation - 不阻止滚动
         function hapticLight() {
           const btn = envelopeBtn;
           btn.style.transition = "transform 0.05s";
@@ -690,7 +684,7 @@
             }, 20);
           }, 50);
           if (window.navigator && window.navigator.vibrate) {
-            window.navigator.vibrate(4); // 降低振动强度，减少耗电
+            window.navigator.vibrate(4);
           }
         }
 
@@ -717,8 +711,11 @@
         }
 
         envelopeBtn.addEventListener("click", openEnvelope);
+        // ✅ 修复：touchstart 使用 passive: true，且不调用 preventDefault
+        // 这样既保留触觉反馈，又不阻止滚动
         envelopeBtn.addEventListener("touchstart", function (e) {
           hapticLight();
+          // 注意：这里不调用 e.preventDefault()
         }, { passive: true });
 
         // ---------- 🎆 PURE CSS FIREWORK · 0 JS运算，极致性能 ----------
@@ -746,7 +743,6 @@
             const size = isLowPerf ? 18 + Math.floor(Math.random() * 24) : 20 + Math.floor(Math.random() * 36);
             emoji.style.fontSize = size + "px";
             
-            // 简化移动端轨迹，减少CSS计算负担
             const dx1 = (Math.random() - 0.5) * (isLowPerf ? 100 : 140);
             const dy1 = (Math.random() - 0.5) * (isLowPerf ? 100 : 140) - (isLowPerf ? 40 : 60);
             const dx2 = dx1 * 1.5 + (Math.random() - 0.5) * (isLowPerf ? 40 : 60);
@@ -785,18 +781,20 @@
         }
 
         // ---------- 🎯 CLICK ANYWHERE EXCEPT ENVELOPE -> 纯CSS烟花 ----------
+        // ✅ 修复：这里完全移除 preventDefault，保留滚动能力
         document.addEventListener("click", function(e) {
           if (!e.target.closest(".envelope-wrapper")) {
             createFireworkCSS(e.clientX, e.clientY);
           }
         });
 
+        // ✅ 修复：touchstart 使用 passive: true，不阻止滚动
         document.addEventListener("touchstart", function(e) {
           if (!e.target.closest(".envelope-wrapper")) {
-            e.preventDefault();
+            // 不再调用 e.preventDefault()
             createFireworkCSS(e.touches[0].clientX, e.touches[0].clientY);
           }
-        }, { passive: false });
+        }, { passive: true }); // 改为 passive: true，允许滚动
 
         // ---------- welcome firework ----------
         window.addEventListener("load", () => {
@@ -808,32 +806,22 @@
         // ---------- 🎵 音乐极致优化 · 完全不卡顿 ----------
         const bgAudio = document.getElementById('bgMusic');
         
-        // 1. 预加载策略：不使用preload="auto"，改为按需加载
-        // 2. 延迟初始化，优先渲染动画
-        // 3. 使用Web Audio API降级策略
-        
         let audioInitialized = false;
         
         function initAudio() {
           if (audioInitialized) return;
           audioInitialized = true;
           
-          // 设置音频参数优化
-          bgAudio.preload = 'metadata'; // 只加载元数据
+          bgAudio.preload = 'metadata';
           bgAudio.load();
           
-          // 使用AudioContext来降低资源占用（如果可用）
           try {
             if (window.AudioContext || window.webkitAudioContext) {
-              // 只是预创建，不实际使用，但可以提前初始化音频系统
               const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
               if (audioCtx.state === 'suspended') {
-                // 等待用户交互时再唤醒
                 const resumeAudio = function() {
                   if (audioCtx.state === 'suspended') {
-                    audioCtx.resume().then(() => {
-                      console.log('AudioContext resumed');
-                    });
+                    audioCtx.resume().catch(() => {});
                   }
                   document.removeEventListener('click', resumeAudio);
                   document.removeEventListener('touchstart', resumeAudio);
@@ -842,25 +830,18 @@
                 document.addEventListener('touchstart', resumeAudio);
               }
             }
-          } catch(e) {
-            // 降级处理
-          }
+          } catch(e) {}
         }
 
-        // 延迟1.5秒初始化音频，优先保证动画流畅
         setTimeout(initAudio, 1500);
         
-        // 用户首次交互时再真正播放
         const startMusicOnInteraction = function() {
           if (bgAudio.paused) {
-            // 设置合理缓冲
             bgAudio.preload = 'auto';
             bgAudio.load();
             
-            // 短暂延迟播放，避免和动画抢资源
             setTimeout(() => {
               bgAudio.play().catch(() => {}).then(() => {
-                // 播放成功后降低音量，更柔和
                 bgAudio.volume = 0.7;
               });
             }, 100);
@@ -872,12 +853,10 @@
         document.addEventListener('click', startMusicOnInteraction);
         document.addEventListener('touchstart', startMusicOnInteraction);
         
-        // 页面可见性优化：当页面不可见时暂停音乐
         document.addEventListener('visibilitychange', function() {
           if (document.hidden) {
             if (!bgAudio.paused) bgAudio.pause();
           } else {
-            // 如果之前播放过，恢复播放
             if (bgAudio.paused && bgAudio.currentTime > 0) {
               bgAudio.play().catch(() => {});
             }
